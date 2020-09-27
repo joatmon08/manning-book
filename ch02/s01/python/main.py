@@ -37,6 +37,7 @@ def update_server(name, tags):
     node = driver.ex_set_node_tags(node=node, tags=tags)
     return node
 
+
 def delete_server(name):
     driver = get_gce_driver()
     node = read_server(name)
@@ -45,7 +46,6 @@ def delete_server(name):
 
 if __name__ == "__main__":
     name = 'hello-world'
-    #create_server(name, 'ubuntu-1804-lts', 'f1-micro')
+    create_server(name, 'ubuntu-1804-lts', 'f1-micro')
     update_server(name, tags=["dev"])
     delete_server(name)
-
