@@ -27,16 +27,17 @@ def read_server(name):
     return server
 
 
-def update_server(name, image_family=None, labels={}):
+def update_server_mutable(name, labels={}):
     driver = get_gce_driver()
     server = read_server(name)
-    if image_family is not None:
-        new_image = driver.ex_get_image_from_family(image_family)
-        if new_image.name is not server.image:
-            delete_server(name)
-            server = create_server(name, image_family, server.size)
     status = driver.ex_set_node_labels(server, labels)
     return status
+
+def update_server_immutable(name, image_family=None):
+    server = read_server(name)
+    delete_server(name)
+    server = create_server(name, image_family, server.size)
+    return server
 
 
 def delete_server(name):
@@ -46,18 +47,41 @@ def delete_server(name):
     return status
 
 
+def change_image(image_family):
+    driver = get_gce_driver()
+    server = read_server(name)
+    new_image = driver.ex_get_image_from_family(image_family)
+    return new_image.name is not server.image
+
+
+def change_labels(labels):
+    server = read_server(name)
+    return labels != server.extra['labels']
+
 if __name__ == "__main__":
     name = 'hello-world'
+    image = 'ubuntu-2004-lts'
+    machine_type = 'f1-micro'
+    labels = {'environment':'dev'}
+
     try:
         server = read_server(name)
     except ResourceNotFoundError:
-        server = create_server(name, 'ubuntu-1804-lts', 'f1-micro')
-    print('Server parameters after creation: ' +
+        server = create_server(name, image, machine_type)
+
+    server = read_server(name)
+    print('Server parameters after update: ' +
           str(server.extra['labels']) + ' , ' + server.image)
 
-    if not update_server(name, image_family='ubuntu-2004-lts',
-                         labels={"environment": "dev"}):
-        raise Exception("Update to server failed")
+    if change_image(image):
+        update_server_immutable(name, image)
+
+    server = read_server(name)
+    print('Server parameters after update: ' +
+          str(server.extra['labels']) + ' , ' + server.image)
+
+    if change_labels(labels):
+        update_server_mutable(name, labels)
 
     server = read_server(name)
     print('Server parameters after update: ' +

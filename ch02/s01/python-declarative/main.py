@@ -35,7 +35,9 @@ def hello_server(name):
 
 
 if __name__ == "__main__":
-    config = hello_server(name='hello-world')
+    servers = ['hello-world', 'hello-world-2']
+    for server in servers:
+        config = hello_server(name=server)
 
-    with open('server.tf.json', 'w') as outfile:
-        json.dump(config, outfile, sort_keys=True, indent=4)
+        with open(server + '.tf.json', 'w') as outfile:
+            json.dump(config, outfile, sort_keys=True, indent=4)

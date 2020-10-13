@@ -5,23 +5,25 @@
         {
           "hello_world": [
             {
-              "allow_stopping_for_update": true,
               "boot_disk": [
                 {
                   "initialize_params": [
                     {
-                      "image": "ubuntu-1804-lts"
+                      "image": "ubuntu-2004-lts"
                     }
                   ]
                 }
               ],
-              "machine_type": "f1-fasdfsa",
+              "machine_type": "f1-micro",
               "name": "hello-world",
               "network_interface": [
                 {
                   "network": "default"
                 }
-              ]
+              ],
+              "labels": {
+                "environment": "dev"
+              }
             }
           ]
         }
