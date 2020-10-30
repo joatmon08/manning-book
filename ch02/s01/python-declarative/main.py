@@ -1,6 +1,7 @@
 import json
 
-def hello_server(name):
+
+def hello_server(name, network):
     return {
         'resource': [
             {
@@ -22,7 +23,7 @@ def hello_server(name):
                                 'name': name,
                                 'network_interface': [
                                     {
-                                        'network': 'default'
+                                        'network': network
                                     }
                                 ]
                             }
@@ -37,7 +38,7 @@ def hello_server(name):
 if __name__ == "__main__":
     servers = ['hello-world', 'hello-world-2']
     for server in servers:
-        config = hello_server(name=server)
+        config = hello_server(name=server, network='default')
 
         with open(server + '.tf.json', 'w') as outfile:
             json.dump(config, outfile, sort_keys=True, indent=4)
