@@ -1,7 +1,5 @@
 import json
-import random
 import os
-from datetime import datetime
 
 
 def google_project_for_reporting_application():

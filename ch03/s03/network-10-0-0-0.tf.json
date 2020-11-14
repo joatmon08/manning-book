@@ -1,0 +1,18 @@
+{
+    "resource": [
+        {
+            "google_compute_subnetwork": [
+                {
+                    "network-10-0-0-0": [
+                        {
+                            "ip_cidr_range": "10.0.0.0/24",
+                            "name": "network-10-0-0-0",
+                            "network": "default",
+                            "region": "us-central1"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
