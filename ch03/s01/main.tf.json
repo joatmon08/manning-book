@@ -3,10 +3,10 @@
         {
             "google_project": [
                 {
-                    "reporting_application": [
+                    "databases": [
                         {
-                            "name": "report-application",
-                            "project_id": "report-application-rosemary"
+                            "name": "databases",
+                            "project_id": "databases-rosemary"
                         }
                     ]
                 }
