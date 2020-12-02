@@ -1,26 +1,42 @@
 import json
-import ipaddress
 
 
-def _generate_subnet_name(address):
-    address_identifier = format(ipaddress.ip_network(
-        address).network_address).replace('.', '-')
-    return f'network-{address_identifier}'
+def standard_tags():
+    return {
+        'customer': 'my-company',
+        'automated': True,
+        'cost_center': 123456,
+        'business_unit': 'ecommerce'
+    }
 
 
-def google_subnetwork(address, region):
-    name = _generate_subnet_name(address)
+def google_server(name, network, zone='us-central1-a', tags={}):
     return {
         'resource': [
             {
-                'google_compute_subnetwork': [
+                'google_compute_instance': [
                     {
-                        f'{name}': [
+                        name: [
                             {
+                                'allow_stopping_for_update': True,
+                                'boot_disk': [
+                                    {
+                                        'initialize_params': [
+                                            {
+                                                'image': 'ubuntu-1804-lts'
+                                            }
+                                        ]
+                                    }
+                                ],
+                                'machine_type': 'f1-micro',
                                 'name': name,
-                                'ip_cidr_range': address,
-                                'region': region,
-                                'network': 'default'
+                                'network_interface': [
+                                    {
+                                        'network': network
+                                    }
+                                ],
+                                'zone': zone,
+                                'labels': tags
                             }
                         ]
                     }
@@ -31,15 +47,8 @@ def google_subnetwork(address, region):
 
 
 if __name__ == "__main__":
-    subnets_and_regions = {
-        '10.0.0.0/24': 'us-central1',
-        '10.0.1.0/24': 'us-west1',
-        '10.0.2.0/24': 'us-east1',
-    }
+    config = google_server(
+        name='hello-world', network='default', tags=standard_tags())
 
-    for address, region in subnets_and_regions.items():
-
-        config = google_subnetwork(address, region)
-
-        with open(f'{_generate_subnet_name(address)}.tf.json', 'w') as outfile:
-            json.dump(config, outfile, sort_keys=True, indent=4)
+    with open('main.tf.json', 'w') as outfile:
+        json.dump(config, outfile, sort_keys=True, indent=4)

@@ -1,0 +1,38 @@
+{
+    "resource": [
+        {
+            "google_compute_instance": [
+                {
+                    "hello-world": [
+                        {
+                            "allow_stopping_for_update": true,
+                            "boot_disk": [
+                                {
+                                    "initialize_params": [
+                                        {
+                                            "image": "ubuntu-1804-lts"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "labels": {
+                                "automated": true,
+                                "business_unit": "ecommerce",
+                                "cost_center": 123456,
+                                "customer": "my-company"
+                            },
+                            "machine_type": "f1-micro",
+                            "name": "hello-world",
+                            "network_interface": [
+                                {
+                                    "network": "default"
+                                }
+                            ],
+                            "zone": "us-central1-a"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
