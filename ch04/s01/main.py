@@ -2,10 +2,10 @@ import json
 import ipaddress
 
 
-class NetworkFacade:
-    def __init__(self, network, cidr_block):
+class NetworkFacade:    #A
+    def __init__(self, network, ip_cidr_range):
         self._network = network
-        self._cidr_block = cidr_block
+        self._ip_cidr_range = ip_cidr_range
 
 
 class NetworkFactoryModule:
@@ -41,14 +41,15 @@ class NetworkFactoryModule:
         }
 
     def outputs(self):
-        return NetworkFacade(self._subnet_name, self._ip_range)
+        return NetworkFacade(self._subnet_name, self._ip_range)    #B
 
 
 class ServerFactoryModule:
     def __init__(self, name, network, zone='us-central1-a'):
         self._name = name
-        self._network = network._network
-        self._network_ip = self._allocate_fifth_ip_address(network._cidr_block)
+        self._network = network._network    #D
+        self._network_ip = self._allocate_fifth_ip_address(    #D
+            network._ip_cidr_range)     #D
         self._zone = zone
         self.resources = self._build()
 
@@ -86,6 +87,6 @@ if __name__ == "__main__":
     with open('network.tf.json', 'w') as outfile:
         json.dump(network.resources, outfile, sort_keys=True, indent=4)
 
-    server = ServerFactoryModule('hello-world', network.outputs())
+    server = ServerFactoryModule('hello-world', network.outputs())    #C
     with open('server.tf.json', 'w') as outfile:
         json.dump(server.resources, outfile, sort_keys=True, indent=4)
