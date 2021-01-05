@@ -1,0 +1,29 @@
+{
+    "resource": [
+        {
+            "google_compute_network": [
+                {
+                    "my-network": [
+                        {
+                            "name": "my-network"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "google_compute_subnetwork": [
+                {
+                    "my-network-subnet": [
+                        {
+                            "ip_cidr_range": "10.0.0.0/28",
+                            "name": "my-network-subnet",
+                            "network": "${google_compute_network.my-network.name}",
+                            "region": "us-central1"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

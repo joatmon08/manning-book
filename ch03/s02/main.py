@@ -1,45 +1,56 @@
 import json
-import ipaddress
+import netaddr
 
 
-def _generate_subnet_name(address):
-    address_identifier = format(ipaddress.ip_network(
-        address).network_address).replace('.', '-')
-    return f'network-{address_identifier}'
+def get_subnet_address(cidr_range):
+    ip = netaddr.IPNetwork(cidr_range)
+    subnets = list(ip.subnet(28, count=4))
+    return format(subnets[0])
 
 
-def google_subnetwork(address, region):
-    name = _generate_subnet_name(address)
-    return {
-        'resource': [
-            {
-                'google_compute_subnetwork': [
-                    {
-                        f'{name}': [
-                            {
-                                'name': name,
-                                'ip_cidr_range': address,
-                                'region': region,
-                                'network': 'default'
-                            }
-                        ]
-                    }
-                ]
-            }
-        ]
-    }
+class Network:
+    def __init__(self, network='my-network', cidr_range='10.0.0.0/16', region='us-central1'):
+        self._network_name = network
+        self._network_cidr = cidr_range
+        self._subnet_name = f'{network}-subnet'
+        self._subnet_cidr = get_subnet_address(self._network_cidr)
+        self._region = region
+        self.resource = self._build()
+
+    def _build(self):
+        return {
+            'resource': [
+                {
+                    'google_compute_network': [
+                        {
+                            f'{self._network_name}': [
+                                {
+                                    'name': self._network_name
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    'google_compute_subnetwork': [
+                        {
+                            f'{self._subnet_name}': [
+                                {
+                                    'name': self._subnet_name,
+                                    'ip_cidr_range': self._subnet_cidr,
+                                    'region': self._region,
+                                    'network': f'${{google_compute_network.{self._network_name}.name}}'
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
 
 
 if __name__ == "__main__":
-    subnets_and_regions = {
-        '10.0.0.0/24': 'us-central1',
-        '10.0.1.0/24': 'us-west1',
-        '10.0.2.0/24': 'us-east1',
-    }
+    network = Network()
 
-    for address, region in subnets_and_regions.items():
-
-        config = google_subnetwork(address, region)
-
-        with open(f'{_generate_subnet_name(address)}.tf.json', 'w') as outfile:
-            json.dump(config, outfile, sort_keys=True, indent=4)
+    with open(f'main.tf.json', 'w') as outfile:
+        json.dump(network.resource, outfile, sort_keys=True, indent=4)

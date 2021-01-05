@@ -1,100 +1,34 @@
 {
     "resource": [
         {
-            "google_compute_instance_template": [
+            "google_compute_instance": [
                 {
-                    "db": [
+                    "hello-world": [
                         {
-                            "disk": [
+                            "allow_stopping_for_update": true,
+                            "boot_disk": [
                                 {
-                                    "auto_delete": true,
-                                    "boot": true,
-                                    "source_image": "https://www.googleapis.com/compute/v1/projects/gce-uefi-images/global/images/ubuntu-1804-bionic-v20200317"
+                                    "initialize_params": [
+                                        {
+                                            "image": "ubuntu-1804-lts"
+                                        }
+                                    ]
                                 }
                             ],
-                            "lifecycle": [
-                                {
-                                    "create_before_destroy": true
-                                }
-                            ],
+                            "labels": {
+                                "automated": true,
+                                "business_unit": "ecommerce",
+                                "cost_center": 123456,
+                                "customer": "my-company"
+                            },
                             "machine_type": "f1-micro",
-                            "name_prefix": "hello-world-",
+                            "name": "hello-world",
                             "network_interface": [
                                 {
                                     "network": "default"
                                 }
                             ],
-                            "region": "us-central1"
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "google_compute_target_pool": [
-                {
-                    "db": [
-                        {
-                            "name": "hello-world",
-                            "region": "us-central1"
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "google_compute_instance_group_manager": [
-                {
-                    "db": [
-                        {
-                            "base_instance_name": "hello-world",
-                            "name": "hello-world-manager",
-                            "target_pools": [
-                                "${google_compute_target_pool.db.id}"
-                            ],
-                            "target_size": 1,
-                            "version": [
-                                {
-                                    "instance_template": "${google_compute_instance_template.db.id}"
-                                }
-                            ],
                             "zone": "us-central1-a"
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "google_compute_forwarding_rule": [
-                {
-                    "db": [
-                        {
-                            "load_balancing_scheme": "EXTERNAL",
-                            "name": "hello-world",
-                            "network_tier": "STANDARD",
-                            "port_range": "3306",
-                            "region": "us-central1",
-                            "target": "${google_compute_target_pool.db.id}"
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "google_compute_firewall": [
-                {
-                    "db": [
-                        {
-                            "allow": [
-                                {
-                                    "ports": [
-                                        "3306"
-                                    ],
-                                    "protocol": "tcp"
-                                }
-                            ],
-                            "name": "hello-world",
-                            "network": "default"
                         }
                     ]
                 }

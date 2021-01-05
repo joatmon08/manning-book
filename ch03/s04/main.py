@@ -1,35 +1,54 @@
 import json
-from server import google_db_server_group
-from loadbalancer import google_load_balancer
-from firewall import google_firewall_rule
 
 
-class DatabaseModule:
-    def __init__(self, name) -> None:
-        self._resources = []
-        self._name = name
-        google_db_server_group(self._resources, self._name)
+def standard_tags():
+    return {
+        'customer': 'my-company',
+        'automated': True,
+        'cost_center': 123456,
+        'business_unit': 'ecommerce'
+    }
 
-    def add_internal_load_balancer(self):
-        google_load_balancer(self._resources, self._name)
 
-    def add_external_load_balancer(self):
-        google_load_balancer(self._resources, self._name, external=True)
-
-    def add_google_firewall_rule(self):
-        google_firewall_rule(self._resources, self._name)
-
-    def build(self):
-        return {
-            'resource': self._resources
-        }
+def google_server(name, network, zone='us-central1-a', tags={}):
+    return {
+        'resource': [
+            {
+                'google_compute_instance': [
+                    {
+                        name: [
+                            {
+                                'allow_stopping_for_update': True,
+                                'boot_disk': [
+                                    {
+                                        'initialize_params': [
+                                            {
+                                                'image': 'ubuntu-1804-lts'
+                                            }
+                                        ]
+                                    }
+                                ],
+                                'machine_type': 'f1-micro',
+                                'name': name,
+                                'network_interface': [
+                                    {
+                                        'network': network
+                                    }
+                                ],
+                                'zone': zone,
+                                'labels': tags
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
 
 
 if __name__ == "__main__":
-
-    database_module = DatabaseModule('hello-world')
-    database_module.add_external_load_balancer()
-    database_module.add_google_firewall_rule()
+    config = google_server(
+        name='hello-world', network='default', tags=standard_tags())
 
     with open('main.tf.json', 'w') as outfile:
-        json.dump(database_module.build(), outfile, sort_keys=True, indent=4)
+        json.dump(config, outfile, sort_keys=True, indent=4)
