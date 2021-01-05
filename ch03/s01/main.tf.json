@@ -1,12 +1,25 @@
 {
     "resource": [
         {
-            "google_project": [
+            "google_compute_network": [
                 {
-                    "databases": [
+                    "my-network": [
                         {
-                            "name": "databases",
-                            "project_id": "databases-rosemary"
+                            "name": "my-network"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "google_compute_subnetwork": [
+                {
+                    "my-network-subnet": [
+                        {
+                            "ip_cidr_range": "10.0.0.0/28",
+                            "name": "my-network-subnet",
+                            "network": "${google_compute_network.my-network.name}",
+                            "region": "us-central1"
                         }
                     ]
                 }
