@@ -9,6 +9,7 @@ idna==2.10
 isort==5.6.4
 lazy-object-proxy==1.5.1
 mccabe==0.6.1
+netaddr==0.8.0
 pycodestyle==2.6.0
 pycparser==2.20
 pylint==2.6.0
