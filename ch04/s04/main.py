@@ -5,30 +5,30 @@ from libcloud.compute.types import Provider
 from libcloud.compute.providers import get_driver
 
 
-def get_network(name):  #A
-    ComputeEngine = get_driver(Provider.GCE)  #A
-    driver = ComputeEngine(  #A
-        credentials.GOOGLE_SERVICE_ACCOUNT,  #A
-        credentials.GOOGLE_SERVICE_ACCOUNT_FILE,  #A
-        project=credentials.GOOGLE_PROJECT,  #A
-        datacenter=credentials.GOOGLE_REGION)  #A
-    return driver.ex_get_subnetwork(  #A
-        name, credentials.GOOGLE_REGION)  #A
+def get_network(name):  # A
+    ComputeEngine = get_driver(Provider.GCE)  # A
+    driver = ComputeEngine(  # A
+        credentials.GOOGLE_SERVICE_ACCOUNT,  # A
+        credentials.GOOGLE_SERVICE_ACCOUNT_FILE,  # A
+        project=credentials.GOOGLE_PROJECT,  # A
+        datacenter=credentials.GOOGLE_REGION)  # A
+    return driver.ex_get_subnetwork(  # A
+        name, credentials.GOOGLE_REGION)  # A
 
 
 class ServerFactoryModule:
     def __init__(self, name, network, zone='us-central1-a'):
         self._name = name
-        gcp_network_object = get_network(network)    #B
-        self._network = gcp_network_object.name    #C
-        self._network_ip = self._allocate_fifth_ip_address(
-            gcp_network_object.cidr)    #C
+        gcp_network_object = get_network(network)  # B
+        self._network = gcp_network_object.name  # C
+        self._network_ip = self._allocate_last_ip_address_in_range(
+            gcp_network_object.cidr)  # C
         self._zone = zone
         self.resources = self._build()
 
-    def _allocate_fifth_ip_address(self, ip_range):
+    def _allocate_last_ip_address_in_range(self, ip_range):
         ip = ipaddress.IPv4Network(ip_range)
-        return format(ip[5])
+        return format(ip[-1])
 
     def _build(self):
         return {
