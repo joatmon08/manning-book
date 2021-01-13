@@ -8,26 +8,33 @@ def _generate_subnet_name(address):
     return f'network-{address_identifier}'
 
 
-def google_subnetwork(address, region):
-    name = _generate_subnet_name(address)
-    return {
-        'resource': [
-            {
-                'google_compute_subnetwork': [
-                    {
-                        f'{name}': [
-                            {
-                                'name': name,
-                                'ip_cidr_range': address,
-                                'region': region,
-                                'network': 'default'
-                            }
-                        ]
-                    }
-                ]
-            }
-        ]
-    }
+class GoogleSubnetwork:
+    def __init__(self, address, region):
+        self.name = _generate_subnet_name(address)
+        self.address = address
+        self.region = region
+        self.network = 'default'
+        self.resource = self._build()
+
+    def _build(self):
+        return {
+            'resource': [
+                {
+                    'google_compute_subnetwork': [
+                        {
+                            f'{self.name}': [
+                                {
+                                    'name': self.name,
+                                    'ip_cidr_range': self.address,
+                                    'region': self.region,
+                                    'network': self.network
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
 
 
 if __name__ == "__main__":
@@ -39,7 +46,7 @@ if __name__ == "__main__":
 
     for address, region in subnets_and_regions.items():
 
-        config = google_subnetwork(address, region)
+        subnetwork = GoogleSubnetwork(address, region)
 
         with open(f'{_generate_subnet_name(address)}.tf.json', 'w') as outfile:
-            json.dump(config, outfile, sort_keys=True, indent=4)
+            json.dump(subnetwork.resource, outfile, sort_keys=True, indent=4)
