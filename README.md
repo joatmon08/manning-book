@@ -7,7 +7,7 @@
 * Install the gcloud command line tool. This allows you to use the terminal to
   authenticate to GCP and issue commands to GCP.
 * Install Python 3 or higher.
-* Install Terraform 0.13 or higher.
+* Install Terraform 0.14 or higher.
 
 ## Installation
 
