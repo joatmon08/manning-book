@@ -12,7 +12,7 @@ PLANNED_STATE_CONFIGURATION_FILE = 'network.state.json'
 expected_network_name = 'hello-world-network'
 
 
-@pytest.fixture(scope="class")
+@pytest.fixture(scope="module")
 def state():
     with open(PLANNED_STATE_CONFIGURATION_FILE, 'r') as f:
         return json.load(f)

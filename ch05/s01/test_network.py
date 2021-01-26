@@ -5,7 +5,7 @@ NETWORK_PREFIX = 'hello-world'
 NETWORK_IP_RANGE = '10.0.0.0/16'
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="module")
 def network():
     return NetworkFactoryModule(
         name=NETWORK_PREFIX, ip_range=NETWORK_IP_RANGE)

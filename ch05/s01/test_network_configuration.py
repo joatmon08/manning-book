@@ -6,7 +6,7 @@ NETWORK_CONFIGURATION_FILE = 'network.tf.json'
 expected_network_name = 'hello-world-network'
 
 
-@pytest.fixture(scope="class")
+@pytest.fixture(scope="module")
 def configuration():
     with open(NETWORK_CONFIGURATION_FILE, 'r') as f:
         return json.load(f)
