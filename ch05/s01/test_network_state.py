@@ -21,20 +21,32 @@ def state():
 @pytest.fixture
 def resource():
     def _get_resource(state, resource_type):
+        resources = []
         for resource in state['planned_values']['root_module']['resources']:
             if resource['type'] == resource_type:
-                return resource
+                resources.append(resource)
+        return resources
     return _get_resource
 
 
-def test_state_of_network_for_name(state, resource):
-    network = resource(state, 'google_compute_network')
+@pytest.fixture
+def network(state, resource):
+    return resource(state, 'google_compute_network')[0]
+
+
+@pytest.fixture
+def subnets(state, resource):
+    return resource(state, 'google_compute_subnetwork')
+
+
+def test_configuration_for_network_name(network):
     assert network['values']['name'] == expected_network_name
 
 
-def test_state_of_subnetwork_for_parameters(state, resource):
-    subnet = resource(state, 'google_compute_subnetwork')
-    assert subnet['values']['name'] == 'hello-world-subnet'
-    assert subnet['values']['network'] == expected_network_name
-    assert subnet['values']['ip_cidr_range'] == '10.0.0.0/16'
-    assert subnet['values']['region'] == 'us-central1'
+def test_configuration_for_three_subnets(subnets):
+    assert len(subnets) == 3
+
+
+def test_configuration_for_subnet_ip_ranges(subnets):
+    for i, subnet in enumerate(subnets):
+        assert subnet['values']['ip_cidr_range'] == f"10.0.{i}.0/24"

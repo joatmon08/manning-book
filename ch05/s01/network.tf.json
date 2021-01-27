@@ -15,10 +15,30 @@
         {
             "google_compute_subnetwork": [
                 {
-                    "hello-world-network": [
+                    "hello-world-network-0": [
                         {
-                            "ip_cidr_range": "10.0.0.0/16",
-                            "name": "hello-world-subnet",
+                            "ip_cidr_range": "10.0.0.0/24",
+                            "name": "hello-world-subnet-0",
+                            "network": "hello-world-network",
+                            "region": "us-central1"
+                        }
+                    ]
+                },
+                {
+                    "hello-world-network-1": [
+                        {
+                            "ip_cidr_range": "10.0.1.0/24",
+                            "name": "hello-world-subnet-1",
+                            "network": "hello-world-network",
+                            "region": "us-central1"
+                        }
+                    ]
+                },
+                {
+                    "hello-world-network-2": [
+                        {
+                            "ip_cidr_range": "10.0.2.0/24",
+                            "name": "hello-world-subnet-2",
                             "network": "hello-world-network",
                             "region": "us-central1"
                         }
