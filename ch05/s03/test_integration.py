@@ -23,14 +23,14 @@ def test_changes_have_successful_return_code(apply_changes):
     assert return_code == 0
 
 
-def test_changes_should_add_1_resource(apply_changes):
-    output = apply_changes[1].decode(encoding='utf-8').split('\n')
-    assert 'Apply complete! Resources: 1 added, 0 changed, 0 destroyed' in output[-2]
-
-
 def test_changes_should_have_no_errors(apply_changes):
     errors = apply_changes[2]
     assert errors == b''
+
+
+def test_changes_should_add_1_resource(apply_changes):
+    output = apply_changes[1].decode(encoding='utf-8').split('\n')
+    assert 'Apply complete! Resources: 1 added, 0 changed, 0 destroyed' in output[-2]
 
 
 def test_server_is_in_running_state(apply_changes):
