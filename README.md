@@ -38,3 +38,20 @@ As a result, creating the resources in GCP require three steps.
    $ terraform init
    $ terraform apply
    ```
+
+## Tests
+
+The chapter on testing uses a Python framework called
+[pytest](https://docs.pytest.org/en/stable/)
+to run the tests. Some of the will create resources in GCP,
+as they are integration or end-to-end tests.
+
+1. Change to the working directory of the code listing you want to run.
+   ```shell
+   $ cd ch05/s01
+   ```
+
+1. Run `pytest`.
+   ```shell
+   $ pytest .
+   ```
