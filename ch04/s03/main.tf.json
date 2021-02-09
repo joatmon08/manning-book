@@ -1,0 +1,58 @@
+{
+    "resource": [
+        {
+            "google_compute_network": [
+                {
+                    "hello-world-network": [
+                        {
+                            "auto_create_subnetworks": false,
+                            "name": "hello-world-network"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "google_compute_subnetwork": [
+                {
+                    "hello-world-network": [
+                        {
+                            "ip_cidr_range": "10.0.0.0/16",
+                            "name": "hello-world-subnet",
+                            "network": "hello-world-network",
+                            "region": "us-central1"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "google_compute_instance": [
+                {
+                    "hello-world": [
+                        {
+                            "allow_stopping_for_update": true,
+                            "boot_disk": [
+                                {
+                                    "initialize_params": [
+                                        {
+                                            "image": "ubuntu-1804-lts"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "machine_type": "f1-micro",
+                            "name": "hello-world",
+                            "network_interface": [
+                                {
+                                    "network": "hello-world-network"
+                                }
+                            ],
+                            "zone": "us-central1-a"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
