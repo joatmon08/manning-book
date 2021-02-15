@@ -1,14 +1,20 @@
 import json
-
-SERVER_CONFIGURATION_FILE = 'main.tf.json'
+import ipaddress
+from network import NetworkFactoryModule
 
 
 class ServerFactoryModule:
     def __init__(self, name, network, zone='us-central1-a'):
         self._name = name
-        self._network = network
+        self._network = network._network  # D
+        self._network_ip = self._allocate_fifth_ip_address(  # D
+            network._ip_cidr_range)  # D
         self._zone = zone
         self.resources = self._build()
+
+    def _allocate_fifth_ip_address(self, ip_range):
+        ip = ipaddress.IPv4Network(ip_range)
+        return format(ip[5])
 
     def _build(self):
         return {
@@ -25,17 +31,10 @@ class ServerFactoryModule:
                         'name': self._name,
                         'zone': self._zone,
                         'network_interface': [{
-                            'network': self._network,
+                            'subnetwork': self._network,
+                            'network_ip': self._network_ip
                         }]
                     }]
                 }]
             }]
         }
-
-
-def generate_json(server_name):
-    server = ServerFactoryModule(name=server_name,
-                                 network='default')
-    with open(SERVER_CONFIGURATION_FILE, 'w') as outfile:
-        json.dump(server.resources, outfile,
-                  sort_keys=True, indent=4)
