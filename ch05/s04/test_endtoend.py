@@ -5,12 +5,12 @@ import subprocess
 import requests
 import test_utils
 
-TEST_SERVER_NAME = 'hello-world-test'
+TEST_SERVICE_NAME = 'hello-world-test'
 
 
 @pytest.fixture(scope='session')
 def apply_changes():
-    generate_json(TEST_SERVER_NAME)
+    generate_json(TEST_SERVICE_NAME)
     assert os.path.exists(SERVICE_CONFIGURATION_FILE)
     assert test_utils.initialize() == 0
     yield test_utils.apply()
