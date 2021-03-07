@@ -15,13 +15,18 @@
                                     ]
                                 }
                             ],
+                            "labels": {
+                                "name": "hello-world",
+                                "purpose": "manning-infrastructure-as-code"
+                            },
                             "machine_type": "f1-micro",
                             "name": "hello-world",
                             "network_interface": [
                                 {
                                     "network": "default"
                                 }
-                            ]
+                            ],
+                            "zone": "us-central1-a"
                         }
                     ]
                 }

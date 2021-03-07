@@ -10,6 +10,7 @@ def hello_server(name, network):
                         name: [
                             {
                                 'allow_stopping_for_update': True,
+                                'zone': 'us-central1-a',
                                 'boot_disk': [
                                     {
                                         'initialize_params': [
@@ -25,7 +26,11 @@ def hello_server(name, network):
                                     {
                                         'network': network
                                     }
-                                ]
+                                ],
+                                'labels': {
+                                    'name': name,
+                                    'purpose': 'manning-infrastructure-as-code'
+                                }
                             }
                         ]
                     }
