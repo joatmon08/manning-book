@@ -92,7 +92,7 @@ directory within the chapter section.
 
 1. Set your environment variables for the region.
    ```shell
-   $ export AWS_REGION=[REGION]
+   $ export AWS_DEFAULT_REGION=[REGION]
    ```
 
 1. Change to the working directory of the code listing you want to run.

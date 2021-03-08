@@ -2,4 +2,3 @@ gcp-key.json
 __pycache__
 credentials.py
 .pytest_cache
-.terraform.lock.hcl

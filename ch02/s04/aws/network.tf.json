@@ -1,0 +1,64 @@
+{
+    "//": "Not created by main.py",
+    "data": [
+        {
+            "aws_ami": [
+                {
+                    "ubuntu": [
+                        {
+                            "most_recent": true,
+                            "filter": [
+                                {
+                                    "name": "name",
+                                    "values": [
+                                        "ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"
+                                    ]
+                                },
+                                {
+                                    "name": "virtualization-type",
+                                    "values": [
+                                        "hvm"
+                                    ]
+                                }
+                            ],
+                            "owners": [
+                                "099720109477"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "aws_region": [
+                {
+                    "current": [
+                        {}
+                    ]
+                }
+            ]
+        },
+        {
+            "aws_vpc": [
+                {
+                    "default": [
+                        {
+                            "default": true
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "aws_subnet": [
+                {
+                    "default": [
+                        {
+                            "availability_zone": "${data.aws_region.current.name}a"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
