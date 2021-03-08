@@ -1,15 +1,21 @@
-# Infrastructure as Code
+# The Art of Infrastructure as Code
+
+This repository includes code examples for
+*The Art of Infrastructure as Code*.
 
 ## Prerequisites
 
 * Sign up for a Google Cloud Platform (GCP) account and project. Check out the
   tutorial at https://console.cloud.google.com/getting-started/checklist.
-* Install the gcloud command line tool. This allows you to use the terminal to
-  authenticate to GCP and issue commands to GCP.
-* Install Python 3 or higher.
+* Install the [gcloud command line](https://cloud.google.com/sdk/docs/install) tool.
+  This allows you to use the terminal to authenticate and issue commands to GCP.
+* Install Python 3.8.5.
 * Install Terraform 0.14 or higher.
 
 ## Installation
+
+You can use [virtualenv](https://docs.python.org/3/library/venv.html) to
+isolate the version of Python and its requirements.
 
 Install the Python requirements.
 
@@ -20,11 +26,33 @@ $ pip install -r requirements.txt
 ## Run
 
 The code listings use Python to write a Terraform JSON configuration file.
-As a result, creating the resources in GCP require three steps.
+
+### Google Cloud Platform (GCP)
+
+The default code listings in the book use GCP because of its
+[free tier](https://cloud.google.com/free).
+
+1. Create a new project in GCP. Change `[PROJECT_ID]` to a unique
+   project identifier of your choice. This isolates resources from
+   this book from other environments or projects.
+   ```shell
+   $ gcloud projects create [PROJECT_ID]
+   ```
+
+1. Set the `CLOUDSDK_CORE_PROJECT` environment variable
+   to the GCP project ID.
+   ```shell
+   $ export CLOUDSDK_CORE_PROJECT=[PROJECT_ID]
+   ```
+
+1. Authenticate to GCP.
+   ```shell
+   gcloud auth login
+   ```
 
 1. Change to the working directory of the code listing you want to run.
    ```shell
-   $ cd ch03/s01
+   $ cd ch02/s04
    ```
 
 1. Run Python.
@@ -33,11 +61,73 @@ As a result, creating the resources in GCP require three steps.
    ```
 
 1. You should have a set of files with `*.tf.json`. Then, you can
-   execute Terraform to initialize and provision the resources.
+   execute Terraform to initialize the plugin.
    ```shell
    $ terraform init
+   ```
+
+1. Apply Terraform and make sure to enter "yes" to create the resources.
+   ```shell
    $ terraform apply
    ```
+
+### Amazon Web Services (AWS)
+
+To show some of the AWS equivalents, I also include a
+few AWS examples. These will always be located in the `aws/`
+directory within the chapter section.
+
+1. [Save](https://docs.aws.amazon.com/general/latest/gr/aws-sec-cred-types.html#access-keys-and-secret-access-keys)
+   your AWS access and secret key.
+
+1. Set your environment variables for the access key.
+   ```shell
+   $ export AWS_ACCESS_KEY_ID=[ACCESS_KEY_ID]
+   ```
+
+1. Set your environment variables for the secret key.
+   ```shell
+   $ export AWS_SECRET_ACCESS_KEY=[SECRET_ACCESS_KEY]
+   ```
+
+1. Set your environment variables for the region.
+   ```shell
+   $ export AWS_REGION=[REGION]
+   ```
+
+1. Change to the working directory of the code listing you want to run.
+   ```shell
+   $ cd ch02/s04/aws
+   ```
+
+1. Run Python.
+   ```shell
+   $ python main.py
+   ```
+
+1. You should have a set of files with `*.tf.json`. Then, you can
+   execute Terraform to initialize the plugin.
+   ```shell
+   $ terraform init
+   ```
+
+1. Apply Terraform and make sure to enter "yes" to create the resources.
+   ```shell
+   $ terraform apply
+   ```
+
+### Removing Resources
+
+You can delete resources by changing the working directory
+of the code listing and destroying resources with Terraform.
+
+```shell
+$ terraform destroy
+```
+
+You can always identify the resources created by this book by examining
+the labels (or tags for AWS). The resources created by this book should
+have a label named `purpose` set to `manning-infrastructure-as-code`.
 
 ## Tests
 
