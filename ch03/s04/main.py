@@ -57,7 +57,7 @@ class GoogleServer:
 
 if __name__ == "__main__":
     config = GoogleServer(
-        name='hello-world', network='default',
+        name='database-server', network='default',
         tags=StandardTags().resource)
 
     with open('main.tf.json', 'w') as outfile:

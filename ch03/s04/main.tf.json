@@ -3,7 +3,7 @@
         {
             "google_compute_instance": [
                 {
-                    "hello-world": [
+                    "database-server": [
                         {
                             "allow_stopping_for_update": true,
                             "boot_disk": [
@@ -22,7 +22,7 @@
                                 "customer": "my-company"
                             },
                             "machine_type": "f1-micro",
-                            "name": "hello-world",
+                            "name": "database-server",
                             "network_interface": [
                                 {
                                     "network": "default"

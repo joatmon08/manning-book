@@ -1,38 +1,24 @@
 import json
+import os
 
 
-class Network:
-    def __init__(self, region='us-central1'):
-        self._network_name = 'my-network'
-        self._network_cidr = '10.0.0.0/16'
-        self._subnet_name = f'{self._network_name}-subnet'
-        self._subnet_cidr = '10.0.0.0/28'
-        self._region = region
+class DatabaseGoogleProject:
+    def __init__(self):
+        self.name = 'databases'  # A
+        self.organization = os.environ.get('USER')  # B
+        self.project_id = f'{self.name}-{self.organization}'  # B
         self.resource = self._build()
 
     def _build(self):
         return {
             'resource': [
                 {
-                    'google_compute_network': [
+                    'google_project': [
                         {
-                            f'{self._network_name}': [
+                            'databases': [
                                 {
-                                    'name': self._network_name
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    'google_compute_subnetwork': [
-                        {
-                            f'{self._subnet_name}': [
-                                {
-                                    'name': self._subnet_name,
-                                    'ip_cidr_range': self._subnet_cidr,
-                                    'region': self._region,
-                                    'network': f'${{google_compute_network.{self._network_name}.name}}'
+                                    'name': self.name,
+                                    'project_id': self.project_id
                                 }
                             ]
                         }
@@ -43,7 +29,7 @@ class Network:
 
 
 if __name__ == "__main__":
-    network = Network()
+    project = DatabaseGoogleProject()  # C
 
-    with open(f'main.tf.json', 'w') as outfile:
-        json.dump(network.resource, outfile, sort_keys=True, indent=4)
+    with open('main.tf.json', 'w') as outfile:  # D
+        json.dump(project.resource, outfile, sort_keys=True, indent=4)  # D
