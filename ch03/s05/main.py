@@ -1,23 +1,30 @@
 import json
-from server import google_db_server_group
-from loadbalancer import google_load_balancer
-from firewall import google_firewall_rule
+from server import DatabaseServerFactory
+from loadbalancer import LoadBalancerFactory
+from firewall import FirewallFactory
 
 
 class DatabaseModule:
     def __init__(self, name) -> None:
         self._resources = []
         self._name = name
-        google_db_server_group(self._resources, self._name)
+        self._resources = DatabaseServerFactory(
+            self._name).resources
 
     def add_internal_load_balancer(self):
-        google_load_balancer(self._resources, self._name)
+        self._resources.extend(
+            LoadBalancerFactory(
+                self._name, external=False).resources)
 
     def add_external_load_balancer(self):
-        google_load_balancer(self._resources, self._name, external=True)
+        self._resources.extend(
+            LoadBalancerFactory(
+                self._name, external=True).resources)
 
     def add_google_firewall_rule(self):
-        google_firewall_rule(self._resources, self._name)
+        self._resources.extend(
+            FirewallFactory(
+                self._name).resources)
 
     def build(self):
         return {
@@ -26,10 +33,10 @@ class DatabaseModule:
 
 
 if __name__ == "__main__":
-
     database_module = DatabaseModule('hello-world')
     database_module.add_external_load_balancer()
     database_module.add_google_firewall_rule()
 
     with open('main.tf.json', 'w') as outfile:
-        json.dump(database_module.build(), outfile, sort_keys=True, indent=4)
+        json.dump(database_module.build(), outfile,
+                  sort_keys=True, indent=4)

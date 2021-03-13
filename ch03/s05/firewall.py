@@ -1,18 +1,26 @@
-def google_firewall_rule(resources, name, network='default'):
-    resources.append({
-        'google_compute_firewall': [{
-            'db': [
-                {
-                    'allow': [
-                        {
-                            'protocol': 'tcp',
-                            'ports': ['3306']
-                        }
-                    ],
-                    'name': name,
-                    'network': network
-                }
+class FirewallFactory:
+    def __init__(self, name, network='default'):
+        self.name = name
+        self.network = network
+        self.resources = self._build()
+
+    def _build(self):
+        resources = []
+        resources.append({
+            'google_compute_firewall': [{
+                'db': [
+                    {
+                        'allow': [
+                            {
+                                'protocol': 'tcp',
+                                'ports': ['3306']
+                            }
+                        ],
+                        'name': self.name,
+                        'network': self.network
+                    }
+                ]
+            }
             ]
-        }
-        ]
-    })
+        })
+        return resources
