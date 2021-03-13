@@ -8,7 +8,7 @@ def _generate_subnet_name(address):
     return f'network-{address_identifier}'
 
 
-class GoogleSubnetwork:
+class SubnetFactory:
     def __init__(self, address, region):
         self.name = _generate_subnet_name(address)
         self.address = address
@@ -46,7 +46,7 @@ if __name__ == "__main__":
 
     for address, region in subnets_and_regions.items():
 
-        subnetwork = GoogleSubnetwork(address, region)
+        subnetwork = SubnetFactory(address, region)
 
         with open(f'{_generate_subnet_name(address)}.tf.json', 'w') as outfile:
             json.dump(subnetwork.resource, outfile, sort_keys=True, indent=4)
