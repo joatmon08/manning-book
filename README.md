@@ -3,6 +3,10 @@
 This repository includes code examples for
 *The Art of Infrastructure as Code*.
 
+> Note: For clarity and cost, some of the examples have been abbreviated.
+  As a result, not all infrastructure resources will register as healthy or error
+  free. READMEs in each section will provide additional information.
+
 ## Prerequisites
 
 * Sign up for a Google Cloud Platform (GCP) account and project. Check out the

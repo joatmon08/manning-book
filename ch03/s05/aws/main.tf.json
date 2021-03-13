@@ -1,0 +1,170 @@
+[
+    {
+        "data": [
+            {
+                "aws_region": [
+                    {
+                        "current": [
+                            {}
+                        ]
+                    }
+                ]
+            },
+            {
+                "aws_vpc": [
+                    {
+                        "default": [
+                            {
+                                "default": true
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "aws_ami": [
+                    {
+                        "ubuntu": [
+                            {
+                                "filter": [
+                                    {
+                                        "name": "name",
+                                        "values": [
+                                            "ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"
+                                        ]
+                                    },
+                                    {
+                                        "name": "virtualization-type",
+                                        "values": [
+                                            "hvm"
+                                        ]
+                                    }
+                                ],
+                                "most_recent": true,
+                                "owners": [
+                                    "099720109477"
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "resource": [
+            {
+                "aws_launch_template": [
+                    {
+                        "db": [
+                            {
+                                "image_id": "${data.aws_ami.ubuntu.id}",
+                                "instance_type": "t2.micro",
+                                "name_prefix": "development-database"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "aws_autoscaling_group": [
+                    {
+                        "db": [
+                            {
+                                "availability_zones": [
+                                    "${data.aws_region.current.name}a"
+                                ],
+                                "desired_capacity": 1,
+                                "launch_template": {
+                                    "id": "${aws_launch_template.db.id}",
+                                    "version": "$Latest"
+                                },
+                                "max_size": 1,
+                                "min_size": 1
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "aws_elb": [
+                    {
+                        "db": [
+                            {
+                                "availability_zones": [
+                                    "${data.aws_region.current.name}a"
+                                ],
+                                "internal": false,
+                                "listener": {
+                                    "instance_port": 3306,
+                                    "instance_protocol": "TCP",
+                                    "lb_port": 3306,
+                                    "lb_protocol": "TCP"
+                                },
+                                "name": "development-database",
+                                "security_groups": [
+                                    "${aws_security_group.db.id}"
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "aws_autoscaling_attachment": [
+                    {
+                        "db": [
+                            {
+                                "autoscaling_group_name": "${aws_autoscaling_group.db.id}",
+                                "elb": "${aws_elb.db.id}"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "aws_security_group": [
+                    {
+                        "db": [
+                            {
+                                "description": "Allow to database",
+                                "egress": [
+                                    {
+                                        "cidr_blocks": [
+                                            "${data.aws_vpc.default.cidr_block}"
+                                        ],
+                                        "description": "Allow outbound to VPC",
+                                        "from_port": 0,
+                                        "ipv6_cidr_blocks": null,
+                                        "prefix_list_ids": null,
+                                        "protocol": "-1",
+                                        "security_groups": null,
+                                        "self": null,
+                                        "to_port": 0
+                                    }
+                                ],
+                                "ingress": [
+                                    {
+                                        "cidr_blocks": [
+                                            "0.0.0.0/0"
+                                        ],
+                                        "description": "Allow inbound to database",
+                                        "from_port": 3306,
+                                        "ipv6_cidr_blocks": null,
+                                        "prefix_list_ids": null,
+                                        "protocol": "tcp",
+                                        "security_groups": null,
+                                        "self": null,
+                                        "to_port": 3306
+                                    }
+                                ],
+                                "name": "development-database",
+                                "vpc_id": "${data.aws_vpc.default.id}"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+]

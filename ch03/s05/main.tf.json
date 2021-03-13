@@ -18,7 +18,7 @@
                                 }
                             ],
                             "machine_type": "f1-micro",
-                            "name_prefix": "hello-world-",
+                            "name_prefix": "development-database-",
                             "network_interface": [
                                 {
                                     "network": "default"
@@ -35,7 +35,7 @@
                 {
                     "db": [
                         {
-                            "name": "hello-world",
+                            "name": "development-database",
                             "region": "us-central1"
                         }
                     ]
@@ -47,8 +47,8 @@
                 {
                     "db": [
                         {
-                            "base_instance_name": "hello-world",
-                            "name": "hello-world-manager",
+                            "base_instance_name": "development-database",
+                            "name": "development-database-manager",
                             "target_pools": [
                                 "${google_compute_target_pool.db.id}"
                             ],
@@ -70,7 +70,7 @@
                     "db": [
                         {
                             "load_balancing_scheme": "EXTERNAL",
-                            "name": "hello-world",
+                            "name": "development-database",
                             "network_tier": "STANDARD",
                             "port_range": "3306",
                             "region": "us-central1",
@@ -93,7 +93,7 @@
                                     "protocol": "tcp"
                                 }
                             ],
-                            "name": "hello-world",
+                            "name": "development-database",
                             "network": "default"
                         }
                     ]
