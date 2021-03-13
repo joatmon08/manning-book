@@ -11,7 +11,7 @@ class StandardTags():
         }
 
 
-class GoogleServer:
+class ServerFactory:
     def __init__(self, name, network, zone='us-central1-a', tags={}):
         self.name = name
         self.network = network
@@ -56,7 +56,7 @@ class GoogleServer:
 
 
 if __name__ == "__main__":
-    config = GoogleServer(
+    config = ServerFactory(
         name='database-server', network='default',
         tags=StandardTags().resource)
 
