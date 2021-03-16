@@ -1,0 +1,32 @@
+{
+    "resource": [
+        {
+            "google_compute_instance": [
+                {
+                    "hello-world": [
+                        {
+                            "allow_stopping_for_update": true,
+                            "boot_disk": [
+                                {
+                                    "initialize_params": [
+                                        {
+                                            "image": "ubuntu-1804-lts"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "machine_type": "f1-micro",
+                            "name": "hello-world",
+                            "network_interface": [
+                                {
+                                    "subnetwork": "default"
+                                }
+                            ],
+                            "zone": "us-central1-a"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
