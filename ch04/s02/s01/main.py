@@ -1,15 +1,17 @@
 import json
 
 
-class NetworkSingleton:
-    def __init__(self, name='default', region='us-central1'):
-        self.name = name
+class NetworkModuleOutput:
+    def __init__(self):
+        with open('network/terraform.tfstate', 'r') as network_state:
+            network_attributes = json.load(network_state)
+        self.name = network_attributes['outputs']['name']['value']
 
 
 class ServerFactoryModule:
     def __init__(self, name, zone='us-central1-a'):
         self._name = name
-        self._network = NetworkSingleton()
+        self._network = NetworkModuleOutput()
         self._zone = zone
         self.resources = self._build()
 
@@ -28,7 +30,7 @@ class ServerFactoryModule:
                         'name': self._name,
                         'zone': self._zone,
                         'network_interface': [{
-                            'subnetwork': self._network.name,
+                            'subnetwork': self._network.name
                         }]
                     }]
                 }]
@@ -38,5 +40,5 @@ class ServerFactoryModule:
 
 if __name__ == "__main__":
     server = ServerFactoryModule(name='hello-world')
-    with open('server.tf.json', 'w') as outfile:
+    with open('main.tf.json', 'w') as outfile:
         json.dump(server.resources, outfile, sort_keys=True, indent=4)

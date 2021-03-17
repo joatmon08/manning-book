@@ -19,7 +19,7 @@
                             "name": "hello-world",
                             "network_interface": [
                                 {
-                                    "subnetwork": "default"
+                                    "subnetwork": "hello-world-subnet"
                                 }
                             ],
                             "zone": "us-central1-a"
