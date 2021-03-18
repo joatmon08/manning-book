@@ -1,7 +1,7 @@
-# Inversion of Control Example.
+# Dependency Inversion Example
 
 This example requires a few steps in order to fully demonstrate
-inversion of control. You will need to run the steps in the `Makefile`
+dependency inversion. You will need to run the steps in the `Makefile`
 for it to work end-to-end.
 
 1. Run `make setup` from this directory. This will create

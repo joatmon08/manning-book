@@ -1,0 +1,39 @@
+{
+  "resource": [
+    {
+      "google_compute_network": [
+        {
+          "hello-world-network": [
+            {
+              "auto_create_subnetworks": false,
+              "name": "hello-world-network"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "google_compute_subnetwork": [
+        {
+          "hello-world-network": [
+            {
+              "ip_cidr_range": "10.0.0.0/16",
+              "name": "hello-world-subnet",
+              "network": "${google_compute_network.hello-world-network.name}",
+              "region": "us-central1"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "output": [
+    {
+      "name": [
+        {
+          "value": "${google_compute_subnetwork.hello-world-network.name}"
+        }
+      ]
+    }
+  ]
+}
