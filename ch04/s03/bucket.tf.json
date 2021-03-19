@@ -1,0 +1,17 @@
+{
+    "resource": [
+        {
+            "google_storage_bucket": [
+                {
+                    "hello-world-storage-bucket": [
+                        {
+                            "force_destroy": true,
+                            "location": "US",
+                            "name": "hello-world-storage-bucket"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

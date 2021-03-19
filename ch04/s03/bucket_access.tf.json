@@ -1,0 +1,17 @@
+{
+    "resource": [
+        {
+            "google_storage_bucket_access_control": [
+                {
+                    "allAuthenticatedUsers": [
+                        {
+                            "bucket": "hello-world-storage-bucket",
+                            "entity": "allAuthenticatedUsers",
+                            "role": "READER"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

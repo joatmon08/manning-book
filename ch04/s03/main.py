@@ -1,39 +1,27 @@
 import json
-import ipaddress
+import re
 
 
-class NetworkFacade:    #A
-    def __init__(self, network, ip_cidr_range):
-        self._network = network
-        self._ip_cidr_range = ip_cidr_range
+class StorageBucketFacade:
+    def __init__(self, name):
+        self.name = name
 
 
-class NetworkFactoryModule:
-    def __init__(self, name, ip_range, region='us-central1'):
-        self._network_name = f'{name}-network'
-        self._subnet_name = f'{name}-subnet'
-        self._ip_range = ip_range
-        self._region = region
+class StorageBucketModule:
+    def __init__(self, name, location='US'):
+        self.name = f'{name}-storage-bucket'
+        self.location = location
         self.resources = self._build()
 
     def _build(self):
         return {
             'resource': [
                 {
-                    'google_compute_network': [{
-                        self._network_name: [{
-                            'name': self._network_name,
-                            'auto_create_subnetworks': False
-                        }]
-                    }]
-                },
-                {
-                    'google_compute_subnetwork': [{
-                        self._network_name: [{
-                            'name': self._subnet_name,
-                            'region': self._region,
-                            'network': self._network_name,
-                            'ip_cidr_range': self._ip_range
+                    'google_storage_bucket': [{
+                        self.name: [{
+                            'name': self.name,
+                            'location': self.location,
+                            'force_destroy': True
                         }]
                     }]
                 }
@@ -41,40 +29,48 @@ class NetworkFactoryModule:
         }
 
     def outputs(self):
-        return NetworkFacade(self._subnet_name, self._ip_range)    #B
+        return StorageBucketFacade(self.name)
 
 
-class ServerFactoryModule:
-    def __init__(self, name, network, zone='us-central1-a'):
-        self._name = name
-        self._network = network._network    #D
-        self._network_ip = self._allocate_fifth_ip_address(    #D
-            network._ip_cidr_range)     #D
-        self._zone = zone
+class StorageBucketAccessModule:
+    def __init__(self, bucket, user, role):
+        if not self._validate_user(user):
+            print("Please enter valid user or group ID")
+            exit()
+        if not self._validate_role(role):
+            print("Please enter valid role")
+            exit()
+        self.bucket = bucket
+        self.user = user
+        self.role = role
         self.resources = self._build()
 
-    def _allocate_fifth_ip_address(self, ip_range):
-        ip = ipaddress.IPv4Network(ip_range)
-        return format(ip[5])
+    def _validate_role(self, role):
+        valid_roles = ['READER', 'OWNER', 'WRITER']
+        if role in valid_roles:
+            return True
+        return False
+
+    def _validate_user(self, user):
+        valid_users_group = ['allUsers', 'allAuthenticatedUsers']
+        if user in valid_users_group:
+            return True
+        regex = r'^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
+        if(re.search(regex, user)):
+            return True
+        return False
+
+    def _change_case(self):
+        return re.sub('[^0-9a-zA-Z]+', '_', self.user)
 
     def _build(self):
         return {
             'resource': [{
-                'google_compute_instance': [{
-                    self._name: [{
-                        'allow_stopping_for_update': True,
-                        'boot_disk': [{
-                            'initialize_params': [{
-                                'image': 'ubuntu-1804-lts'
-                            }]
-                        }],
-                        'machine_type': 'f1-micro',
-                        'name': self._name,
-                        'zone': self._zone,
-                        'network_interface': [{
-                            'subnetwork': self._network,
-                            'network_ip': self._network_ip
-                        }]
+                'google_storage_bucket_access_control': [{
+                    self._change_case(): [{
+                        'bucket': self.bucket.name,
+                        'role': self.role,
+                        'entity': self.user
                     }]
                 }]
             }]
@@ -82,11 +78,10 @@ class ServerFactoryModule:
 
 
 if __name__ == "__main__":
-    network = NetworkFactoryModule(
-        name='hello-world', ip_range='10.0.0.0/16')
-    with open('network.tf.json', 'w') as outfile:
-        json.dump(network.resources, outfile, sort_keys=True, indent=4)
+    bucket = StorageBucketModule('hello-world')
+    with open('bucket.tf.json', 'w') as outfile:
+        json.dump(bucket.resources, outfile, sort_keys=True, indent=4)
 
-    server = ServerFactoryModule('hello-world', network.outputs())    #C
-    with open('server.tf.json', 'w') as outfile:
+    server = StorageBucketAccessModule(bucket.outputs(), 'allAuthenticatedUsers', 'READER')
+    with open('bucket_access.tf.json', 'w') as outfile:
         json.dump(server.resources, outfile, sort_keys=True, indent=4)
