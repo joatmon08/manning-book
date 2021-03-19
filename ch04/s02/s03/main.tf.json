@@ -19,7 +19,7 @@
                             "name": "hello-world",
                             "network_interface": [
                                 {
-                                    "network_ip": "10.128.15.255",
+                                    "network_ip": "10.128.0.5",
                                     "subnetwork": "default"
                                 }
                             ],

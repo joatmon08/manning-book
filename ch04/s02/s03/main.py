@@ -21,14 +21,14 @@ class ServerFactoryModule:
         self._name = name
         gcp_network_object = get_network(network)
         self._network = gcp_network_object.name
-        self._network_ip = self._allocate_last_ip_address_in_range(
+        self._network_ip = self._allocate_fifth_ip_address_in_range(
             gcp_network_object.cidr)
         self._zone = zone
         self.resources = self._build()
 
-    def _allocate_last_ip_address_in_range(self, ip_range):
+    def _allocate_fifth_ip_address_in_range(self, ip_range):
         ip = ipaddress.IPv4Network(ip_range)
-        return format(ip[-1])
+        return format(ip[5])
 
     def _build(self):
         return {

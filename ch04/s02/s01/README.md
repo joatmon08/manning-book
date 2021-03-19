@@ -1,4 +1,4 @@
-# Inversion of Control Example.
+# Inversion of Control Example
 
 This example requires a few steps in order to fully demonstrate
 inversion of control. You will need to run the steps in the `Makefile`
