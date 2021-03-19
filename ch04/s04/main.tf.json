@@ -1,0 +1,95 @@
+{
+    "resource": [
+        {
+            "google_project_iam_member": [
+                {
+                    "audit-team": [
+                        {
+                            "member": "group:audit-team@example.com",
+                            "project": "infrastructure-as-code-book",
+                            "role": "roles/viewer"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "google_project_iam_member": [
+                {
+                    "user-01": [
+                        {
+                            "member": "user:user-01@example.com",
+                            "project": "infrastructure-as-code-book",
+                            "role": "roles/viewer"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "google_project_iam_member": [
+                {
+                    "user-02": [
+                        {
+                            "member": "user:user-02@example.com",
+                            "project": "infrastructure-as-code-book",
+                            "role": "roles/viewer"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "google_project_iam_member": [
+                {
+                    "infrastructure-team": [
+                        {
+                            "member": "group:infrastructure-team@example.com",
+                            "project": "infrastructure-as-code-book",
+                            "role": "roles/editor"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "google_project_iam_member": [
+                {
+                    "user-03": [
+                        {
+                            "member": "user:user-03@example.com",
+                            "project": "infrastructure-as-code-book",
+                            "role": "roles/editor"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "google_project_iam_member": [
+                {
+                    "automation-01": [
+                        {
+                            "member": "serviceAccount:automation-01@example.com",
+                            "project": "infrastructure-as-code-book",
+                            "role": "roles/editor"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "google_project_iam_member": [
+                {
+                    "manager-team": [
+                        {
+                            "member": "group:manager-team@example.com",
+                            "project": "infrastructure-as-code-book",
+                            "role": "roles/owner"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

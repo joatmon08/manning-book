@@ -19,8 +19,8 @@
                             "name": "hello-world",
                             "network_interface": [
                                 {
-                                    "network_ip": "10.128.15.255",
-                                    "subnetwork": "default"
+                                    "network_ip": "10.0.0.5",
+                                    "subnetwork": "hello-world-subnet"
                                 }
                             ],
                             "zone": "us-central1-a"

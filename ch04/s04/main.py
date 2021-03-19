@@ -1,60 +1,65 @@
-import credentials
-import ipaddress
+# Note: This example will not apply successfully
+# with Terraform because it uses mock users and
+# groups. However, it will successfully pass a plan.
+
 import json
-from libcloud.compute.types import Provider
-from libcloud.compute.providers import get_driver
+import access
 
 
-def get_network(name):  # A
-    ComputeEngine = get_driver(Provider.GCE)  # A
-    driver = ComputeEngine(  # A
-        credentials.GOOGLE_SERVICE_ACCOUNT,  # A
-        credentials.GOOGLE_SERVICE_ACCOUNT_FILE,  # A
-        project=credentials.GOOGLE_PROJECT,  # A
-        datacenter=credentials.GOOGLE_REGION)  # A
-    return driver.ex_get_subnetwork(  # A
-        name, credentials.GOOGLE_REGION)  # A
+class GCPIdentityAdapter:
+    EMAIL_DOMAIN = 'example.com'
+
+    def __init__(self, metadata):
+        gcp_roles = {  # A
+            'read': 'roles/viewer',  # A
+            'write': 'roles/editor',  # A
+            'admin': 'roles/owner'  # A
+        }  # A
+        self.gcp_users = []
+        for permission, users in metadata.items():
+            for user in users:
+                self.gcp_users.append(
+                    (user, self._get_gcp_identity(user),
+                        gcp_roles.get(permission)))
+
+    def _get_gcp_identity(self, user):  # B
+        if 'team' in user:
+            return f'group:{user}@{self.EMAIL_DOMAIN}'
+        elif 'automation' in user:
+            return f'serviceAccount:{user}@{self.EMAIL_DOMAIN}'
+        else:
+            return f'user:{user}@{self.EMAIL_DOMAIN}'
+
+    def outputs(self):
+        return self.gcp_users
 
 
-class ServerFactoryModule:
-    def __init__(self, name, network, zone='us-central1-a'):
-        self._name = name
-        gcp_network_object = get_network(network)  # B
-        self._network = gcp_network_object.name  # C
-        self._network_ip = self._allocate_last_ip_address_in_range(
-            gcp_network_object.cidr)  # C
-        self._zone = zone
+class GCPProjectUsers:  # C
+    def __init__(self, project, users):
+        self._project = project
+        self._users = users
         self.resources = self._build()
 
-    def _allocate_last_ip_address_in_range(self, ip_range):
-        ip = ipaddress.IPv4Network(ip_range)
-        return format(ip[-1])
-
     def _build(self):
-        return {
-            'resource': [{
-                'google_compute_instance': [{
-                    self._name: [{
-                        'allow_stopping_for_update': True,
-                        'boot_disk': [{
-                            'initialize_params': [{
-                                'image': 'ubuntu-1804-lts'
-                            }]
-                        }],
-                        'machine_type': 'f1-micro',
-                        'name': self._name,
-                        'zone': self._zone,
-                        'network_interface': [{
-                            'subnetwork': self._network,
-                            'network_ip': self._network_ip
-                        }]
+        resources = []
+        for (user, member, role) in self._users:
+            resources.append({
+                'google_project_iam_member': [{
+                    user: [{
+                        'role': role,
+                        'member': member,
+                        'project': self._project
                     }]
                 }]
-            }]
+            })
+        return {
+            'resource': resources
         }
 
 
 if __name__ == "__main__":
-    server = ServerFactoryModule(name='hello-world', network='default')
-    with open('server.tf.json', 'w') as outfile:
-        json.dump(server.resources, outfile, sort_keys=True, indent=4)
+    users = GCPIdentityAdapter(access.Infrastructure().resources).outputs()
+
+    with open('main.tf.json', 'w') as outfile:
+        json.dump(GCPProjectUsers('infrastructure-as-code-book',
+                                  users).resources, outfile, sort_keys=True, indent=4)
