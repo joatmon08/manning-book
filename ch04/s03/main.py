@@ -82,6 +82,7 @@ if __name__ == "__main__":
     with open('bucket.tf.json', 'w') as outfile:
         json.dump(bucket.resources, outfile, sort_keys=True, indent=4)
 
-    server = StorageBucketAccessModule(bucket.outputs(), 'allAuthenticatedUsers', 'READER')
+    server = StorageBucketAccessModule(
+        bucket.outputs(), 'allAuthenticatedUsers', 'READER')
     with open('bucket_access.tf.json', 'w') as outfile:
         json.dump(server.resources, outfile, sort_keys=True, indent=4)
