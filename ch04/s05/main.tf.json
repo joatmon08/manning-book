@@ -17,6 +17,9 @@
                 {
                     "hello-world-network": [
                         {
+                            "depends_on": [
+                                "google_compute_network.hello-world-network"
+                            ],
                             "ip_cidr_range": "10.0.0.0/16",
                             "name": "hello-world-subnet",
                             "network": "hello-world-network",
@@ -41,14 +44,50 @@
                                     ]
                                 }
                             ],
+                            "depends_on": [
+                                "google_compute_subnetwork.hello-world-network"
+                            ],
                             "machine_type": "f1-micro",
                             "name": "hello-world",
                             "network_interface": [
                                 {
-                                    "network": "hello-world-network"
+                                    "network_ip": "10.0.0.5",
+                                    "subnetwork": "hello-world-subnet"
                                 }
                             ],
+                            "tags": [
+                                "h10005"
+                            ],
                             "zone": "us-central1-a"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "google_compute_firewall": [
+                {
+                    "hello-world": [
+                        {
+                            "allow": [
+                                {
+                                    "ports": [
+                                        "22"
+                                    ],
+                                    "protocol": "tcp"
+                                }
+                            ],
+                            "depends_on": [
+                                "google_compute_instance.hello-world"
+                            ],
+                            "name": "hello-world",
+                            "network": "hello-world-network",
+                            "source_ranges": [
+                                "0.0.0.0/0"
+                            ],
+                            "target_tags": [
+                                "h10005"
+                            ]
                         }
                     ]
                 }
