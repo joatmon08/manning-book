@@ -15,6 +15,10 @@ class GoogleCloudRunFactoryModule:
         self.resources = self._build()
 
     def _build(self):
+        service = f"${{google_cloud_run_service.{self._name}.name}}"
+        location = f"${{google_cloud_run_service.{self._name}.location}}"
+        url = f"${{google_cloud_run_service.{self._name}.status[0].url}}"
+
         return {
             'resource': [{
                 'google_cloud_run_service': [{
@@ -36,8 +40,8 @@ class GoogleCloudRunFactoryModule:
                 }],
                 'google_cloud_run_service_iam_member': [{
                     self._name: [{
-                        'service': f"${{google_cloud_run_service.{self._name}.name}}",
-                        'location': f"${{google_cloud_run_service.{self._name}.location}}",
+                        'service': service,
+                        'location': location,
                         'role': 'roles/run.invoker',
                         'member': 'allUsers'
                     }]
@@ -45,7 +49,7 @@ class GoogleCloudRunFactoryModule:
             }],
             'output': {
                 'url': {
-                    'value': f"${{google_cloud_run_service.{self._name}.status[0].url}}"
+                    'value': url
                 }
             }
         }

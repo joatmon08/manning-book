@@ -38,14 +38,25 @@ def service_iam_member(configuration, resource):
     return resource(
         configuration,
         'google_cloud_run_service_iam_member'
-    )
+    )[0][expected_service_name][0]
 
 
+@pytest.mark.unit
 def test_configuration_for_service_name(service):
-    assert service['name'] \
-        == expected_service_name
+    assert service['name'] == expected_service_name
 
 
+@pytest.mark.unit
 def test_configuration_for_service_version(service):
-    assert service['template']['spec']['containers']['image'] \
-        == f'{SERVICE_IMAGE}:{version.HELLO}'
+    assert service['template']['spec']['containers'][
+        'image'] == f'{SERVICE_IMAGE}:{version.HELLO}'
+
+
+@pytest.mark.unit
+def test_configuration_for_service_iam_member_role(service_iam_member):
+    assert service_iam_member['role'] == 'roles/run.invoker'
+
+
+@pytest.mark.unit
+def test_configuration_for_service_iam_member(service_iam_member):
+    assert service_iam_member['member'] == 'allUsers'
