@@ -11,7 +11,7 @@ defaults:
     working-directory: ch06/s01
 
 jobs:
-  build:
+  unit-test:
 
     runs-on: ubuntu-latest
 
@@ -26,9 +26,13 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    - name: Set GCP authentication
+      run: |
+        python -m pip install --upgrade pip
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Lint with autopep8
       run: |
         autopep8 -r -d --exit-code . 
     - name: Test with pytest
       run: |
-        pytest
+        pytest -m unit

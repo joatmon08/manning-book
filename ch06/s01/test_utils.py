@@ -1,18 +1,32 @@
-import credentials
+import json
+import os
 import subprocess
 from libcloud.compute.types import Provider
 from libcloud.compute.providers import get_driver
 
+GOOGLE_SERVICE_ACCOUNT_FILE = 'gcp-key.json'
+
+
+class GoogleCredentials():
+    def __init__(self):
+        with open(GOOGLE_SERVICE_ACCOUNT_FILE, 'w') as f:
+            f.write(os.environ.get('GOOGLE_SERVICE_ACCOUNT_JSON'))
+        self.service_account_file = GOOGLE_SERVICE_ACCOUNT_FILE
+        self.service_account = os.environ.get('GOOGLE_SERVICE_ACCOUNT')
+        self.project = os.environ.get('GOOGLE_PROJECT')
+        self.datacenter = os.environ.get('GOOGLE_REGION')
+
 
 def get_server(name):
+    credentials = GoogleCredentials()
     ComputeEngine = get_driver(Provider.GCE)
     driver = ComputeEngine(
-        credentials.GOOGLE_SERVICE_ACCOUNT,
-        credentials.GOOGLE_SERVICE_ACCOUNT_FILE,
-        project=credentials.GOOGLE_PROJECT,
-        datacenter=credentials.GOOGLE_REGION)
+        credentials.service_account,
+        credentials.service_account_file,
+        project=credentials.project,
+        datacenter=credentials.datacenter)
     return driver.ex_get_node(
-        name, credentials.GOOGLE_REGION)
+        name, credentials.datacenter)
 
 
 def initialize():
