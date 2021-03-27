@@ -49,7 +49,7 @@ def test_configuration_for_service_name(service):
 @pytest.mark.unit
 def test_configuration_for_service_version(service):
     assert service['template']['spec']['containers'][
-        'image'] == f'{SERVICE_IMAGE}:{version.HELLO}'
+        'image'] == f'{SERVICE_IMAGE}@{version.HELLO}'
 
 
 @pytest.mark.unit

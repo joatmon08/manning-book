@@ -1,0 +1,44 @@
+{
+    "output": {
+        "url": {
+            "value": "${google_cloud_run_service.hello-world.status[0].url}"
+        }
+    },
+    "resource": [
+        {
+            "google_cloud_run_service": [
+                {
+                    "hello-world": [
+                        {
+                            "location": "us-central1",
+                            "name": "hello-world",
+                            "template": {
+                                "spec": {
+                                    "containers": {
+                                        "image": "us-docker.pkg.dev/cloudrun/container/hello@sha256:63f08b198ddc94bbdbea264315ee3820ec7f9535423dc1c0a4c6af170ac79df6"
+                                    }
+                                }
+                            },
+                            "traffic": {
+                                "latest_revision": true,
+                                "percent": 100
+                            }
+                        }
+                    ]
+                }
+            ],
+            "google_cloud_run_service_iam_member": [
+                {
+                    "hello-world": [
+                        {
+                            "location": "${google_cloud_run_service.hello-world.location}",
+                            "member": "allUsers",
+                            "role": "roles/run.invoker",
+                            "service": "${google_cloud_run_service.hello-world.name}"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

@@ -4,6 +4,7 @@ import version
 
 SERVICE_CONFIGURATION_FILE = 'main.tf.json'
 SERVICE_IMAGE = 'us-docker.pkg.dev/cloudrun/container/hello'
+SERVICE_NAME = 'hello-world'
 
 
 class GoogleCloudRunFactoryModule:
@@ -11,7 +12,7 @@ class GoogleCloudRunFactoryModule:
                  location='us-central1'):
         self._name = name
         self._location = location
-        self._image = f'{image}:{version}'
+        self._image = f'{image}@{version}'
         self.resources = self._build()
 
     def _build(self):
