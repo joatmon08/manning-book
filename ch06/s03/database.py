@@ -1,0 +1,1 @@
+print("Database outputs endpoint and password")
