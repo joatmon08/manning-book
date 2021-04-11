@@ -1,0 +1,30 @@
+{
+  "resource": [
+    {
+      "google_project_iam_member": [
+        {
+          "operations": [
+            {
+              "member": "group:team-operations@example.com",
+              "project": "infrastructure-as-code-book",
+              "role": "roles/editor"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "google_project_iam_member": [
+        {
+          "inventory": [
+            {
+              "member": "group:team-inventory@example.com",
+              "project": "infrastructure-as-code-book",
+              "role": "roles/viewer"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
