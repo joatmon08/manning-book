@@ -1,4 +1,3 @@
-import ipaddress
 from tags import StandardTags
 
 
