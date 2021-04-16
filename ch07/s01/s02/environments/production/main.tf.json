@@ -1,0 +1,116 @@
+{
+    "resource": [
+        {
+            "google_compute_network": [
+                {
+                    "production-hello-world-network": [
+                        {
+                            "auto_create_subnetworks": false,
+                            "name": "production-hello-world-network"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "google_compute_subnetwork": [
+                {
+                    "production-hello-world-network": [
+                        {
+                            "depends_on": [
+                                "google_compute_network.production-hello-world-network"
+                            ],
+                            "ip_cidr_range": "10.0.0.0/16",
+                            "name": "production-hello-world-subnet",
+                            "network": "production-hello-world-network",
+                            "region": "us-central1"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "google_compute_instance": [
+                {
+                    "production-hello-world": [
+                        {
+                            "allow_stopping_for_update": true,
+                            "boot_disk": [
+                                {
+                                    "initialize_params": [
+                                        {
+                                            "image": "ubuntu-1804-lts"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "depends_on": [
+                                "google_compute_subnetwork.production-hello-world-network"
+                            ],
+                            "labels": {
+                                "automated": true,
+                                "environment": "production"
+                            },
+                            "machine_type": "f1-micro",
+                            "name": "production-hello-world",
+                            "network_interface": [
+                                {
+                                    "access_config": [
+                                        {}
+                                    ],
+                                    "subnetwork": "production-hello-world-subnet"
+                                }
+                            ],
+                            "zone": "us-central1-a"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "google_sql_database": [
+                {
+                    "production-hello-world": [
+                        {
+                            "instance": "${google_sql_database_instance.production-hello-world.name}",
+                            "name": "production-hello-world"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "google_sql_database_instance": [
+                {
+                    "production-hello-world": [
+                        {
+                            "deletion_protection": false,
+                            "depends_on": [
+                                "google_compute_instance.production-hello-world"
+                            ],
+                            "region": "us-central1",
+                            "settings": [
+                                {
+                                    "ip_configuration": [
+                                        {
+                                            "authorized_networks": [
+                                                {
+                                                    "value": "${google_compute_instance.production-hello-world.network_interface.0.access_config.0.nat_ip}"
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "tier": "db-f1-micro",
+                                    "user_labels": {
+                                        "automated": true,
+                                        "environment": "production"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,4 @@
+-e git+https://github.com/joatmon08/gcp-tags-module.git@v1.0.0#egg=tags
+-e git+https://github.com/joatmon08/gcp-network-module.git@v1.0.0#egg=network
+-e git+https://github.com/joatmon08/gcp-server-module.git@v0.0.1#egg=server
+-e git+https://github.com/joatmon08/gcp-database-module.git@v1.0.0#egg=database
