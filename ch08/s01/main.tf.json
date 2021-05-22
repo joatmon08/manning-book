@@ -1,0 +1,33 @@
+{
+    "resource": {
+        "google_project_iam_member": [
+            {
+                "roles-compute-networkAdmin": {
+                    "member": "serviceAccount:${google_service_account.frontend.email}",
+                    "role": "roles/compute.networkAdmin"
+                }
+            },
+            {
+                "roles-appengine-appAdmin": {
+                    "member": "serviceAccount:${google_service_account.frontend.email}",
+                    "role": "roles/appengine.appAdmin"
+                }
+            },
+            {
+                "roles-cloudsql-admin": {
+                    "member": "serviceAccount:${google_service_account.frontend.email}",
+                    "role": "roles/cloudsql.admin"
+                }
+            }
+        ],
+        "google_service_account": [
+            {
+                "frontend": [
+                    {
+                        "account_id": "frontend"
+                    }
+                ]
+            }
+        ]
+    }
+}
