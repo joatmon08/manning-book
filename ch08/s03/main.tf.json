@@ -1,0 +1,57 @@
+{
+    "resource": [
+        {
+            "google_compute_firewall": [
+                {
+                    "development-frontend-database": [
+                        {
+                            "allow": [
+                                {
+                                    "ports": [
+                                        1433
+                                    ],
+                                    "protocol": "tcp"
+                                }
+                            ],
+                            "name": "development-frontend-database",
+                            "network": "default",
+                            "source_ranges": [
+                                "0.0.0.0/0"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "google_sql_database": [
+                {
+                    "development-frontend-database": [
+                        {
+                            "instance": "${google_sql_database_instance.development-frontend-database.name}",
+                            "name": "development-frontend-database"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "google_sql_database_instance": [
+                {
+                    "development-frontend-database": [
+                        {
+                            "deletion_protection": false,
+                            "region": "us-central1",
+                            "settings": [
+                                {
+                                    "tier": "db-f1-micro",
+                                    "user_labels": null
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
