@@ -1,7 +1,6 @@
 from main import generate_json, SERVICE_CONFIGURATION_FILE
 import os
 import pytest
-import subprocess
 import requests
 import test_utils
 
