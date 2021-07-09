@@ -21,9 +21,6 @@ This repository includes code examples for
 
 ## Installation
 
-You can use [virtualenv](https://docs.python.org/3/library/venv.html) to
-isolate the version of Python and its requirements.
-
 Install the Python requirements.
 
 ```shell
@@ -137,20 +134,6 @@ the labels (or tags for AWS). The resources created by this book should
 have a label named `purpose` set to `manning-infrastructure-as-code`.
 
 ## Tests
-
-
-
-compute.disks.list
-compute.instances.get
-compute.instances.list
-compute.regions.list
-compute.zones.get
-compute.zones.list
-iam.serviceAccounts.actAs
-run.services.create
-run.services.delete
-run.services.get
-run.services.getIamPolicy
 
 The chapter on testing uses a Python framework called
 [pytest](https://docs.pytest.org/en/stable/)
