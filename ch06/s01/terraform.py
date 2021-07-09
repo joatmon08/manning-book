@@ -6,7 +6,7 @@ import subprocess
 def initialize():
     print("Running terraform init...")
     process = subprocess.Popen(
-        'terraform init',
+        'terraform init -no-color',
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         shell=True
@@ -18,7 +18,7 @@ def initialize():
 def apply():
     print("Running terraform apply...")
     process = subprocess.Popen(
-        'terraform apply -auto-approve',
+        'terraform apply -no-color -auto-approve',
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         shell=True
@@ -30,7 +30,7 @@ def apply():
 def destroy():
     print("Running terraform destroy...")
     process = subprocess.Popen(
-        'terraform destroy -auto-approve',
+        'terraform destroy -no-color -auto-approve',
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         shell=True

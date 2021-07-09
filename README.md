@@ -9,12 +9,15 @@ This repository includes code examples for
 
 ## Prerequisites
 
-* Sign up for a Google Cloud Platform (GCP) account and project. Check out the
+- Sign up for a Google Cloud Platform (GCP) account and project. Check out the
   tutorial at https://console.cloud.google.com/getting-started/checklist.
-* Install the [gcloud command line](https://cloud.google.com/sdk/docs/install) tool.
+- Install the [gcloud command line](https://cloud.google.com/sdk/docs/install) tool.
   This allows you to use the terminal to authenticate and issue commands to GCP.
-* Install Python 3.8.5.
-* Install Terraform 0.14 or higher.
+- Install Python 3.9.6.
+  - I use [pyenv](https://github.com/pyenv/pyenv)
+    and [pyenv-virtualenv](https://github.com/pyenv/pyenv-virtualenv)
+    to manage my Python versions.
+- Install Terraform 0.14 or higher.
 
 ## Installation
 
@@ -134,6 +137,20 @@ the labels (or tags for AWS). The resources created by this book should
 have a label named `purpose` set to `manning-infrastructure-as-code`.
 
 ## Tests
+
+
+
+compute.disks.list
+compute.instances.get
+compute.instances.list
+compute.regions.list
+compute.zones.get
+compute.zones.list
+iam.serviceAccounts.actAs
+run.services.create
+run.services.delete
+run.services.get
+run.services.getIamPolicy
 
 The chapter on testing uses a Python framework called
 [pytest](https://docs.pytest.org/en/stable/)

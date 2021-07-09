@@ -2,7 +2,6 @@ from libcloud.compute.types import NodeState
 from main import generate_json, SERVER_CONFIGURATION_FILE
 import os
 import pytest
-import subprocess
 import test_utils
 
 TEST_SERVER_NAME = 'hello-world-test'
