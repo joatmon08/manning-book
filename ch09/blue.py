@@ -4,6 +4,7 @@ VERSION = 'blue'
 REGION = 'us-central1'
 IP_RANGE = '10.0.0.0/24'
 
+zone = f'{REGION}-a'
 network_name = f'{TEAM}-{ENVIRONMENT}-network-{VERSION}'
 server_name = f'{TEAM}-{ENVIRONMENT}-server-{VERSION}'
 
@@ -64,7 +65,8 @@ def cluster(name=cluster_name,
                         'location': region,
                         'name': name,
                         'remove_default_node_pool': True,
-                        'network': f'${{google_compute_network.{VERSION}.name}}'
+                        'network': f'${{google_compute_network.{VERSION}.name}}',
+                        'subnetwork': f'${{google_compute_subnetwork.{VERSION}.name}}'
                     }
                 ]
             },
@@ -101,7 +103,7 @@ def cluster(name=cluster_name,
 
 
 def server0(name=f'{server_name}-0',
-            zone=f'{REGION}-a'):
+            zone=zone):
     return [
         {
             'google_compute_instance': {
@@ -116,7 +118,7 @@ def server0(name=f'{server_name}-0',
                     'name': name,
                     'zone': zone,
                     'network_interface': [{
-                        'network': f'${{google_compute_network.{VERSION}.name}}'
+                        'subnetwork': f'${{google_compute_subnetwork.{VERSION}.name}}'
                     }],
                     'labels': labels
                 }]
@@ -126,7 +128,7 @@ def server0(name=f'{server_name}-0',
 
 
 def server1(name=f'{server_name}-1',
-            zone=f'{REGION}-b'):
+            zone=zone):
     return [
         {
             'google_compute_instance': {
@@ -141,7 +143,7 @@ def server1(name=f'{server_name}-1',
                     'name': name,
                     'zone': zone,
                     'network_interface': [{
-                        'network': f'${{google_compute_network.{VERSION}.name}}'
+                        'subnetwork': f'${{google_compute_subnetwork.{VERSION}.name}}'
                     }],
                     'labels': labels
                 }]
@@ -151,7 +153,7 @@ def server1(name=f'{server_name}-1',
 
 
 def server2(name=f'{server_name}-2',
-            zone=f'{REGION}-c'):
+            zone=zone):
     return [
         {
             'google_compute_instance': {
@@ -166,7 +168,7 @@ def server2(name=f'{server_name}-2',
                     'name': name,
                     'zone': zone,
                     'network_interface': [{
-                        'network': f'${{google_compute_network.{VERSION}.name}}'
+                        'subnetwork': f'${{google_compute_subnetwork.{VERSION}.name}}'
                     }],
                     'labels': labels
                 }]

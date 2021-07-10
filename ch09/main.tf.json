@@ -30,7 +30,8 @@
                         "location": "us-central1",
                         "name": "sundew-production-cluster-blue",
                         "network": "${google_compute_network.blue.name}",
-                        "remove_default_node_pool": true
+                        "remove_default_node_pool": true,
+                        "subnetwork": "${google_compute_subnetwork.blue.name}"
                     }
                 ]
             },
@@ -86,7 +87,7 @@
                         "name": "sundew-production-server-blue-0",
                         "network_interface": [
                             {
-                                "network": "${google_compute_network.blue.name}"
+                                "subnetwork": "${google_compute_subnetwork.blue.name}"
                             }
                         ],
                         "zone": "us-central1-a"
@@ -117,10 +118,10 @@
                         "name": "sundew-production-server-blue-1",
                         "network_interface": [
                             {
-                                "network": "${google_compute_network.blue.name}"
+                                "subnetwork": "${google_compute_subnetwork.blue.name}"
                             }
                         ],
-                        "zone": "us-central1-b"
+                        "zone": "us-central1-a"
                     }
                 ]
             }
@@ -148,10 +149,112 @@
                         "name": "sundew-production-server-blue-2",
                         "network_interface": [
                             {
-                                "network": "${google_compute_network.blue.name}"
+                                "subnetwork": "${google_compute_subnetwork.blue.name}"
                             }
                         ],
-                        "zone": "us-central1-c"
+                        "zone": "us-central1-a"
+                    }
+                ]
+            }
+        },
+        {
+            "google_compute_backend_service": {
+                "sundew": [
+                    {
+                        "backend": [
+                            {
+                                "group": "${google_compute_instance_group.blue.self_link}"
+                            }
+                        ],
+                        "health_checks": [
+                            "${google_compute_health_check.sundew.id}"
+                        ],
+                        "load_balancing_scheme": "INTERNAL_SELF_MANAGED",
+                        "locality_lb_policy": "ROUND_ROBIN",
+                        "name": "sundew-production-shared",
+                        "provider": "google-beta"
+                    }
+                ]
+            },
+            "google_compute_global_forwarding_rule": {
+                "sundew": [
+                    {
+                        "name": "sundew-production-shared",
+                        "port_range": "80",
+                        "target": "${google_compute_target_http_proxy.sundew.id}"
+                    }
+                ]
+            },
+            "google_compute_health_check": {
+                "sundew": [
+                    {
+                        "http_health_check": [
+                            {
+                                "port": 8080
+                            }
+                        ],
+                        "name": "sundew-production-shared",
+                        "provider": "google-beta"
+                    }
+                ]
+            },
+            "google_compute_instance_group": {
+                "blue": [
+                    {
+                        "description": "Blue server instance group",
+                        "instances": [
+                            "${google_compute_instance.blue_0.id}",
+                            "${google_compute_instance.blue_1.id}",
+                            "${google_compute_instance.blue_2.id}"
+                        ],
+                        "name": "sundew-production-server-blue",
+                        "named_port": [
+                            {
+                                "name": "http",
+                                "port": "8080"
+                            }
+                        ],
+                        "zone": "us-central1-a"
+                    }
+                ]
+            },
+            "google_compute_target_http_proxy": {
+                "sundew": [
+                    {
+                        "description": "Target proxy for sundew",
+                        "name": "sundew-production-shared",
+                        "url_map": "${google_compute_url_map.sundew.id}"
+                    }
+                ]
+            },
+            "google_compute_url_map": {
+                "sundew": [
+                    {
+                        "default_service": "${google_compute_backend_service.sundew.id}",
+                        "description": "URL Map for sundew",
+                        "host_rule": [
+                            {
+                                "hosts": [
+                                    "sundew.dc4plants.com"
+                                ],
+                                "path_matcher": "allpaths"
+                            }
+                        ],
+                        "name": "sundew-production-shared",
+                        "path_matcher": [
+                            {
+                                "default_service": "${google_compute_backend_service.sundew.id}",
+                                "name": "allpaths",
+                                "path_rule": [
+                                    {
+                                        "paths": [
+                                            "/*"
+                                        ],
+                                        "service": "${google_compute_backend_service.sundew.id}"
+                                    }
+                                ]
+                            }
+                        ]
                     }
                 ]
             }
