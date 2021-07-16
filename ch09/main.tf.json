@@ -158,8 +158,165 @@
             }
         },
         {
+            "google_compute_network": {
+                "passive": [
+                    {
+                        "auto_create_subnetworks": false,
+                        "name": "sundew-production-network-passive"
+                    }
+                ]
+            }
+        },
+        {
+            "google_compute_subnetwork": {
+                "passive": [
+                    {
+                        "ip_cidr_range": "10.0.1.0/24",
+                        "name": "sundew-production-network-passive-subnet",
+                        "network": "${google_compute_network.passive.name}",
+                        "region": "us-west1"
+                    }
+                ]
+            }
+        },
+        {
+            "google_container_cluster": {
+                "passive": [
+                    {
+                        "initial_node_count": 1,
+                        "location": "us-west1",
+                        "name": "sundew-production-cluster-passive",
+                        "network": "${google_compute_network.passive.name}",
+                        "remove_default_node_pool": true,
+                        "subnetwork": "${google_compute_subnetwork.passive.name}"
+                    }
+                ]
+            },
+            "google_container_node_pool": {
+                "passive": [
+                    {
+                        "cluster": "${google_container_cluster.passive.name}",
+                        "location": "us-west1",
+                        "name": "sundew-production-cluster-nodes-passive",
+                        "node_config": [
+                            {
+                                "machine_type": "e2-medium",
+                                "oauth_scopes": [
+                                    "https://www.googleapis.com/auth/cloud-platform"
+                                ],
+                                "preemptible": true,
+                                "service_account": "${google_service_account.passive.email}"
+                            }
+                        ],
+                        "node_count": 1
+                    }
+                ]
+            },
+            "google_service_account": {
+                "passive": [
+                    {
+                        "account_id": "sundew-production-sa-passive",
+                        "display_name": "sundew-production-sa-passive"
+                    }
+                ]
+            }
+        },
+        {
+            "google_compute_instance": {
+                "passive_0": [
+                    {
+                        "allow_stopping_for_update": true,
+                        "boot_disk": [
+                            {
+                                "initialize_params": [
+                                    {
+                                        "image": "ubuntu-1804-lts"
+                                    }
+                                ]
+                            }
+                        ],
+                        "labels": {
+                            "automated": true,
+                            "environment": "production",
+                            "team": "sundew"
+                        },
+                        "machine_type": "f1-micro",
+                        "name": "sundew-production-server-passive-0",
+                        "network_interface": [
+                            {
+                                "subnetwork": "${google_compute_subnetwork.passive.name}"
+                            }
+                        ],
+                        "zone": "us-west1-a"
+                    }
+                ]
+            }
+        },
+        {
+            "google_compute_instance": {
+                "passive_1": [
+                    {
+                        "allow_stopping_for_update": true,
+                        "boot_disk": [
+                            {
+                                "initialize_params": [
+                                    {
+                                        "image": "ubuntu-1804-lts"
+                                    }
+                                ]
+                            }
+                        ],
+                        "labels": {
+                            "automated": true,
+                            "environment": "production",
+                            "team": "sundew"
+                        },
+                        "machine_type": "f1-micro",
+                        "name": "sundew-production-server-passive-1",
+                        "network_interface": [
+                            {
+                                "subnetwork": "${google_compute_subnetwork.passive.name}"
+                            }
+                        ],
+                        "zone": "us-west1-a"
+                    }
+                ]
+            }
+        },
+        {
+            "google_compute_instance": {
+                "passive_2": [
+                    {
+                        "allow_stopping_for_update": true,
+                        "boot_disk": [
+                            {
+                                "initialize_params": [
+                                    {
+                                        "image": "ubuntu-1804-lts"
+                                    }
+                                ]
+                            }
+                        ],
+                        "labels": {
+                            "automated": true,
+                            "environment": "production",
+                            "team": "sundew"
+                        },
+                        "machine_type": "f1-micro",
+                        "name": "sundew-production-server-passive-2",
+                        "network_interface": [
+                            {
+                                "subnetwork": "${google_compute_subnetwork.passive.name}"
+                            }
+                        ],
+                        "zone": "us-west1-a"
+                    }
+                ]
+            }
+        },
+        {
             "google_compute_backend_service": {
-                "sundew": [
+                "blue": [
                     {
                         "backend": [
                             {
@@ -171,14 +328,78 @@
                         ],
                         "load_balancing_scheme": "INTERNAL_SELF_MANAGED",
                         "locality_lb_policy": "ROUND_ROBIN",
-                        "name": "sundew-production-shared",
+                        "name": "sundew-production-shared-blue",
                         "provider": "google-beta"
                     }
                 ]
             },
+            "google_compute_instance_group": {
+                "blue": [
+                    {
+                        "description": "blue server instance group",
+                        "instances": [
+                            "${google_compute_instance.blue_0.id}",
+                            "${google_compute_instance.blue_1.id}",
+                            "${google_compute_instance.blue_2.id}"
+                        ],
+                        "name": "sundew-production-shared-blue",
+                        "named_port": [
+                            {
+                                "name": "http",
+                                "port": "8080"
+                            }
+                        ],
+                        "zone": "us-central1-a"
+                    }
+                ]
+            }
+        },
+        {
+            "google_compute_backend_service": {
+                "passive": [
+                    {
+                        "backend": [
+                            {
+                                "group": "${google_compute_instance_group.passive.self_link}"
+                            }
+                        ],
+                        "health_checks": [
+                            "${google_compute_health_check.sundew.id}"
+                        ],
+                        "load_balancing_scheme": "INTERNAL_SELF_MANAGED",
+                        "locality_lb_policy": "ROUND_ROBIN",
+                        "name": "sundew-production-shared-passive",
+                        "provider": "google-beta"
+                    }
+                ]
+            },
+            "google_compute_instance_group": {
+                "passive": [
+                    {
+                        "description": "passive server instance group",
+                        "instances": [
+                            "${google_compute_instance.passive_0.id}",
+                            "${google_compute_instance.passive_1.id}",
+                            "${google_compute_instance.passive_2.id}"
+                        ],
+                        "name": "sundew-production-shared-passive",
+                        "named_port": [
+                            {
+                                "name": "http",
+                                "port": "8080"
+                            }
+                        ],
+                        "zone": "us-west1-a"
+                    }
+                ]
+            }
+        },
+        {
             "google_compute_global_forwarding_rule": {
                 "sundew": [
                     {
+                        "ip_address": "0.0.0.0",
+                        "load_balancing_scheme": "INTERNAL_SELF_MANAGED",
                         "name": "sundew-production-shared",
                         "port_range": "80",
                         "target": "${google_compute_target_http_proxy.sundew.id}"
@@ -198,26 +419,6 @@
                     }
                 ]
             },
-            "google_compute_instance_group": {
-                "blue": [
-                    {
-                        "description": "Blue server instance group",
-                        "instances": [
-                            "${google_compute_instance.blue_0.id}",
-                            "${google_compute_instance.blue_1.id}",
-                            "${google_compute_instance.blue_2.id}"
-                        ],
-                        "name": "sundew-production-server-blue",
-                        "named_port": [
-                            {
-                                "name": "http",
-                                "port": "8080"
-                            }
-                        ],
-                        "zone": "us-central1-a"
-                    }
-                ]
-            },
             "google_compute_target_http_proxy": {
                 "sundew": [
                     {
@@ -230,7 +431,7 @@
             "google_compute_url_map": {
                 "sundew": [
                     {
-                        "default_service": "${google_compute_backend_service.sundew.id}",
+                        "default_service": "${google_compute_backend_service.blue.id}",
                         "description": "URL Map for sundew",
                         "host_rule": [
                             {
@@ -243,14 +444,25 @@
                         "name": "sundew-production-shared",
                         "path_matcher": [
                             {
-                                "default_service": "${google_compute_backend_service.sundew.id}",
+                                "default_service": "${google_compute_backend_service.blue.id}",
                                 "name": "allpaths",
                                 "path_rule": [
                                     {
                                         "paths": [
                                             "/*"
                                         ],
-                                        "service": "${google_compute_backend_service.sundew.id}"
+                                        "route_action": {
+                                            "weighted_backend_services": [
+                                                {
+                                                    "backend_service": "${google_compute_backend_service.blue.id}",
+                                                    "weight": 100
+                                                },
+                                                {
+                                                    "backend_service": "${google_compute_backend_service.passive.id}",
+                                                    "weight": 0
+                                                }
+                                            ]
+                                        }
                                     }
                                 ]
                             }
