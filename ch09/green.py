@@ -1,6 +1,6 @@
 TEAM = 'sundew'
 ENVIRONMENT = 'production'
-VERSION = 'blue'
+VERSION = 'green'
 REGION = 'us-central1'
 IP_RANGE = '10.0.0.0/24'
 
@@ -12,6 +12,7 @@ cluster_name = f'{TEAM}-{ENVIRONMENT}-cluster-{VERSION}'
 cluster_nodes = f'{TEAM}-{ENVIRONMENT}-cluster-nodes-{VERSION}'
 cluster_service_account = f'{TEAM}-{ENVIRONMENT}-sa-{VERSION}'
 
+
 labels = {
     'team': TEAM,
     'environment': ENVIRONMENT,
@@ -20,11 +21,11 @@ labels = {
 
 
 def build():
-    return network() + \
-        cluster() + \
-        server0() + \
-        server1() + \
-        server2()
+    return network()
+        # cluster() + \
+        # server0() + \
+        # server1() + \
+        # server2()
 
 
 def network(name=network_name,
@@ -35,7 +36,8 @@ def network(name=network_name,
             'google_compute_network': {
                 VERSION: [{
                     'name': name,
-                    'auto_create_subnetworks': False
+                    'auto_create_subnetworks': False,
+                    'routing_mode': 'GLOBAL'
                 }]
             }
         },
@@ -50,7 +52,6 @@ def network(name=network_name,
             }
         }
     ]
-
 
 def cluster(name=cluster_name,
             node_name=cluster_nodes,
@@ -118,10 +119,7 @@ def server0(name=f'{server_name}-0',
                     'name': name,
                     'zone': zone,
                     'network_interface': [{
-                        'subnetwork': f'${{google_compute_subnetwork.{VERSION}.name}}',
-                        'access_config': {
-                            'network_tier': 'STANDARD'
-                        }
+                        'subnetwork': f'${{google_compute_subnetwork.{VERSION}.name}}'
                     }],
                     'labels': labels
                 }]
@@ -146,10 +144,7 @@ def server1(name=f'{server_name}-1',
                     'name': name,
                     'zone': zone,
                     'network_interface': [{
-                        'subnetwork': f'${{google_compute_subnetwork.{VERSION}.name}}',
-                        'access_config': {
-                            'network_tier': 'STANDARD'
-                        }
+                        'subnetwork': f'${{google_compute_subnetwork.{VERSION}.name}}'
                     }],
                     'labels': labels
                 }]
@@ -174,10 +169,7 @@ def server2(name=f'{server_name}-2',
                     'name': name,
                     'zone': zone,
                     'network_interface': [{
-                        'subnetwork': f'${{google_compute_subnetwork.{VERSION}.name}}',
-                        'access_config': {
-                            'network_tier': 'STANDARD'
-                        }
+                        'subnetwork': f'${{google_compute_subnetwork.{VERSION}.name}}'
                     }],
                     'labels': labels
                 }]

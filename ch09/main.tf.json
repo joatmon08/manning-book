@@ -87,6 +87,9 @@
                         "name": "sundew-production-server-blue-0",
                         "network_interface": [
                             {
+                                "access_config": {
+                                    "network_tier": "STANDARD"
+                                },
                                 "subnetwork": "${google_compute_subnetwork.blue.name}"
                             }
                         ],
@@ -118,6 +121,9 @@
                         "name": "sundew-production-server-blue-1",
                         "network_interface": [
                             {
+                                "access_config": {
+                                    "network_tier": "STANDARD"
+                                },
                                 "subnetwork": "${google_compute_subnetwork.blue.name}"
                             }
                         ],
@@ -149,6 +155,9 @@
                         "name": "sundew-production-server-blue-2",
                         "network_interface": [
                             {
+                                "access_config": {
+                                    "network_tier": "STANDARD"
+                                },
                                 "subnetwork": "${google_compute_subnetwork.blue.name}"
                             }
                         ],
@@ -244,6 +253,9 @@
                         "name": "sundew-production-server-passive-0",
                         "network_interface": [
                             {
+                                "access_config": {
+                                    "network_tier": "STANDARD"
+                                },
                                 "subnetwork": "${google_compute_subnetwork.passive.name}"
                             }
                         ],
@@ -275,6 +287,9 @@
                         "name": "sundew-production-server-passive-1",
                         "network_interface": [
                             {
+                                "access_config": {
+                                    "network_tier": "STANDARD"
+                                },
                                 "subnetwork": "${google_compute_subnetwork.passive.name}"
                             }
                         ],
@@ -306,6 +321,9 @@
                         "name": "sundew-production-server-passive-2",
                         "network_interface": [
                             {
+                                "access_config": {
+                                    "network_tier": "STANDARD"
+                                },
                                 "subnetwork": "${google_compute_subnetwork.passive.name}"
                             }
                         ],
@@ -467,6 +485,29 @@
                                 ]
                             }
                         ]
+                    }
+                ]
+            }
+        },
+        {
+            "google_compute_network": {
+                "green": [
+                    {
+                        "auto_create_subnetworks": false,
+                        "name": "sundew-production-network-green",
+                        "routing_mode": "GLOBAL"
+                    }
+                ]
+            }
+        },
+        {
+            "google_compute_subnetwork": {
+                "green": [
+                    {
+                        "ip_cidr_range": "10.0.0.0/24",
+                        "name": "sundew-production-network-green-subnet",
+                        "network": "${google_compute_network.green.name}",
+                        "region": "us-central1"
                     }
                 ]
             }

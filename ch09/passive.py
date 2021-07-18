@@ -118,7 +118,10 @@ def server0(name=f'{server_name}-0',
                     'name': name,
                     'zone': zone,
                     'network_interface': [{
-                        'subnetwork': f'${{google_compute_subnetwork.{VERSION}.name}}'
+                        'subnetwork': f'${{google_compute_subnetwork.{VERSION}.name}}',
+                        'access_config': {
+                            'network_tier': 'STANDARD'
+                        }
                     }],
                     'labels': labels
                 }]
@@ -143,7 +146,10 @@ def server1(name=f'{server_name}-1',
                     'name': name,
                     'zone': zone,
                     'network_interface': [{
-                        'subnetwork': f'${{google_compute_subnetwork.{VERSION}.name}}'
+                        'subnetwork': f'${{google_compute_subnetwork.{VERSION}.name}}',
+                        'access_config': {
+                            'network_tier': 'STANDARD'
+                        }
                     }],
                     'labels': labels
                 }]
@@ -168,7 +174,10 @@ def server2(name=f'{server_name}-2',
                     'name': name,
                     'zone': zone,
                     'network_interface': [{
-                        'subnetwork': f'${{google_compute_subnetwork.{VERSION}.name}}'
+                        'subnetwork': f'${{google_compute_subnetwork.{VERSION}.name}}',
+                        'access_config': {
+                            'network_tier': 'STANDARD'
+                        }
                     }],
                     'labels': labels
                 }]
