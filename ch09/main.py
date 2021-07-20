@@ -5,9 +5,13 @@ import shared
 import json
 
 if __name__ == "__main__":
-    resources = {'resource': blue.build() +
-                 passive.build() + shared.build() +
-                 green.build()}
+    resources = {
+        'resource':
+        shared.build() +
+        blue.build() +
+        green.build()
+        #  passive.build() +
+    }
 
     with open('main.tf.json', 'w') as outfile:
         json.dump(resources, outfile,

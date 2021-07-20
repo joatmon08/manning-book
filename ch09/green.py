@@ -6,6 +6,7 @@ IP_RANGE = '10.0.0.0/24'
 
 zone = f'{REGION}-a'
 network_name = f'{TEAM}-{ENVIRONMENT}-network-{VERSION}'
+
 server_name = f'{TEAM}-{ENVIRONMENT}-server-{VERSION}'
 
 cluster_name = f'{TEAM}-{ENVIRONMENT}-cluster-{VERSION}'
@@ -21,11 +22,11 @@ labels = {
 
 
 def build():
-    return network()
-        # cluster() + \
-        # server0() + \
-        # server1() + \
-        # server2()
+    return network() + \
+        cluster() + \
+        server0() + \
+        server1() + \
+        server2()
 
 
 def network(name=network_name,
@@ -52,6 +53,7 @@ def network(name=network_name,
             }
         }
     ]
+
 
 def cluster(name=cluster_name,
             node_name=cluster_nodes,
@@ -119,7 +121,10 @@ def server0(name=f'{server_name}-0',
                     'name': name,
                     'zone': zone,
                     'network_interface': [{
-                        'subnetwork': f'${{google_compute_subnetwork.{VERSION}.name}}'
+                        'subnetwork': f'${{google_compute_subnetwork.{VERSION}.name}}',
+                        'access_config': {
+                            'network_tier': 'PREMIUM'
+                        }
                     }],
                     'labels': labels
                 }]
@@ -144,7 +149,10 @@ def server1(name=f'{server_name}-1',
                     'name': name,
                     'zone': zone,
                     'network_interface': [{
-                        'subnetwork': f'${{google_compute_subnetwork.{VERSION}.name}}'
+                        'subnetwork': f'${{google_compute_subnetwork.{VERSION}.name}}',
+                        'access_config': {
+                            'network_tier': 'PREMIUM'
+                        }
                     }],
                     'labels': labels
                 }]
@@ -169,7 +177,10 @@ def server2(name=f'{server_name}-2',
                     'name': name,
                     'zone': zone,
                     'network_interface': [{
-                        'subnetwork': f'${{google_compute_subnetwork.{VERSION}.name}}'
+                        'subnetwork': f'${{google_compute_subnetwork.{VERSION}.name}}',
+                        'access_config': {
+                            'network_tier': 'PREMIUM'
+                        }
                     }],
                     'labels': labels
                 }]

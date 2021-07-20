@@ -6,6 +6,7 @@ IP_RANGE = '10.0.0.0/24'
 
 zone = f'{REGION}-a'
 network_name = f'{TEAM}-{ENVIRONMENT}-network-{VERSION}'
+
 server_name = f'{TEAM}-{ENVIRONMENT}-server-{VERSION}'
 
 cluster_name = f'{TEAM}-{ENVIRONMENT}-cluster-{VERSION}'

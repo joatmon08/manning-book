@@ -1,4 +1,5 @@
 import blue
+import green
 import passive
 
 TEAM = 'sundew'
@@ -15,13 +16,20 @@ services_list = [
         'version': 'blue',
         'zone': blue.zone,
         'name': f'{shared_name}-blue',
-        'weight': 100
-    }, {
-        'version': 'passive',
-        'zone': passive.zone,
-        'name': f'{shared_name}-passive',
-        'weight': 0
+        'weight': 90
+    },
+    {
+        'version': 'green',
+        'zone': green.zone,
+        'name': f'{shared_name}-green',
+        'weight': 10
     }
+    # {
+    #     'version': 'passive',
+    #     'zone': passive.zone,
+    #     'name': f'{shared_name}-passive',
+    #     'weight': 0
+    # }
 ]
 
 
