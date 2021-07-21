@@ -114,7 +114,7 @@ def server0(name=f'{server_name}-0',
                             'image': 'ubuntu-1804-lts'
                         }]
                     }],
-                    'machine_type': 'f1-micro',
+                    'machine_type': 'e2-micro',
                     'name': name,
                     'zone': zone,
                     'network_interface': [{
@@ -142,7 +142,7 @@ def server1(name=f'{server_name}-1',
                             'image': 'ubuntu-1804-lts'
                         }]
                     }],
-                    'machine_type': 'f1-micro',
+                    'machine_type': 'e2-micro',
                     'name': name,
                     'zone': zone,
                     'network_interface': [{
@@ -170,7 +170,7 @@ def server2(name=f'{server_name}-2',
                             'image': 'ubuntu-1804-lts'
                         }]
                     }],
-                    'machine_type': 'f1-micro',
+                    'machine_type': 'e2-micro',
                     'name': name,
                     'zone': zone,
                     'network_interface': [{

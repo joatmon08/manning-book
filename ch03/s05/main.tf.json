@@ -17,7 +17,7 @@
                                     "create_before_destroy": true
                                 }
                             ],
-                            "machine_type": "f1-micro",
+                            "machine_type": "e2-micro",
                             "name_prefix": "development-database-",
                             "network_interface": [
                                 {

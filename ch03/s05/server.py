@@ -24,7 +24,7 @@ class DatabaseServerFactory:
                                 'create_before_destroy': True
                             }
                         ],
-                        'machine_type': 'f1-micro',
+                        'machine_type': 'e2-micro',
                         'name_prefix': f'{self.name}-',
                         'network_interface': [
                             {

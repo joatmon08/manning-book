@@ -20,7 +20,7 @@ def hello_server(name, network):
                                         ]
                                     }
                                 ],
-                                'machine_type': 'f1-micro',
+                                'machine_type': 'e2-micro',
                                 'name': name,
                                 'network_interface': [
                                     {

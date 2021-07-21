@@ -29,7 +29,7 @@ class ServerFactoryModule():
                                 'image': 'ubuntu-1804-lts'
                             }]
                         }],
-                        'machine_type': 'f1-micro',
+                        'machine_type': 'e2-micro',
                         'name': self._name,
                         'zone': self._zone,
                         'network_interface': [{

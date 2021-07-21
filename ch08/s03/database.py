@@ -3,7 +3,7 @@ class DatabaseFactoryModule():
                  network='default',
                  region='us-central1',
                  tags=None,
-                 tier='db-f1-micro',
+                 tier='db-e2-micro',
                  deletion_protection=False):
         self._name = name
         self._tags = tags

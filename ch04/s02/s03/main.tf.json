@@ -15,7 +15,7 @@
                                     ]
                                 }
                             ],
-                            "machine_type": "f1-micro",
+                            "machine_type": "e2-micro",
                             "name": "hello-world",
                             "network_interface": [
                                 {

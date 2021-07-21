@@ -240,7 +240,7 @@
                             "environment": "production",
                             "team": "sundew"
                         },
-                        "machine_type": "f1-micro",
+                        "machine_type": "e2-micro",
                         "name": "sundew-production-server-blue-0",
                         "network_interface": [
                             {
@@ -274,7 +274,7 @@
                             "environment": "production",
                             "team": "sundew"
                         },
-                        "machine_type": "f1-micro",
+                        "machine_type": "e2-micro",
                         "name": "sundew-production-server-blue-1",
                         "network_interface": [
                             {
@@ -308,7 +308,7 @@
                             "environment": "production",
                             "team": "sundew"
                         },
-                        "machine_type": "f1-micro",
+                        "machine_type": "e2-micro",
                         "name": "sundew-production-server-blue-2",
                         "network_interface": [
                             {
@@ -407,7 +407,7 @@
                             "environment": "production",
                             "team": "sundew"
                         },
-                        "machine_type": "f1-micro",
+                        "machine_type": "e2-micro",
                         "name": "sundew-production-server-green-0",
                         "network_interface": [
                             {
@@ -441,7 +441,7 @@
                             "environment": "production",
                             "team": "sundew"
                         },
-                        "machine_type": "f1-micro",
+                        "machine_type": "e2-micro",
                         "name": "sundew-production-server-green-1",
                         "network_interface": [
                             {
@@ -475,7 +475,7 @@
                             "environment": "production",
                             "team": "sundew"
                         },
-                        "machine_type": "f1-micro",
+                        "machine_type": "e2-micro",
                         "name": "sundew-production-server-green-2",
                         "network_interface": [
                             {

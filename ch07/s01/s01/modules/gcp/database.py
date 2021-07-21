@@ -5,7 +5,7 @@ class DatabaseFactoryModule():
     def __init__(self, name, server, network,
                  environment,
                  region='us-central1',
-                 tier='db-f1-micro', deletion_protection=False):
+                 tier='db-e2-micro', deletion_protection=False):
         self._name = name
         self._server = server
         self._tags = StandardTags(environment).tags

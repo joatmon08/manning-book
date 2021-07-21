@@ -37,7 +37,7 @@ class ServerFactory:
                                             ]
                                         }
                                     ],
-                                    'machine_type': 'f1-micro',
+                                    'machine_type': 'e2-micro',
                                     'name': self.name,
                                     'network_interface': [
                                         {

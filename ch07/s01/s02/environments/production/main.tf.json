@@ -51,7 +51,7 @@
                                 "automated": true,
                                 "environment": "production"
                             },
-                            "machine_type": "f1-micro",
+                            "machine_type": "e2-micro",
                             "name": "production-hello-world",
                             "network_interface": [
                                 {
@@ -100,7 +100,7 @@
                                             ]
                                         }
                                     ],
-                                    "tier": "db-f1-micro",
+                                    "tier": "db-e2-micro",
                                     "user_labels": {
                                         "automated": true,
                                         "environment": "production"

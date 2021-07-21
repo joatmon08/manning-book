@@ -21,7 +21,7 @@
                                 "cost_center": 123456,
                                 "customer": "my-company"
                             },
-                            "machine_type": "f1-micro",
+                            "machine_type": "e2-micro",
                             "name": "database-server",
                             "network_interface": [
                                 {

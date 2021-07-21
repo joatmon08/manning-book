@@ -9,4 +9,7 @@ for directory in $example_directories; do
     cd ${directory} && terraform validate
     echo "****** running terraform fmt in ${directory}... ******"
     cd ${directory} && terraform fmt
+
+    echo "**** running python... ****"
+    cd ${directory} && python main.py
 done
