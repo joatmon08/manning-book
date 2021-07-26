@@ -1,0 +1,159 @@
+{
+    "format_version": "0.2",
+    "terraform_version": "1.0.2",
+    "resource_changes": [
+        {
+            "address": "google_sql_database_instance.blue",
+            "mode": "managed",
+            "type": "google_sql_database_instance",
+            "name": "blue",
+            "provider_name": "registry.terraform.io/hashicorp/google",
+            "change": {
+                "actions": [
+                    "delete"
+                ],
+                "before": {
+                    "clone": [],
+                    "connection_name": "infrastructure-as-code-book:us-central1:sundew-production-database-blue-suffix",
+                    "database_version": "POSTGRES_12",
+                    "deletion_protection": true,
+                    "first_ip_address": "34.66.126.191",
+                    "id": "sundew-production-database-blue-suffix",
+                    "ip_address": [
+                        {
+                            "ip_address": "34.66.126.191",
+                            "time_to_retire": "",
+                            "type": "PRIMARY"
+                        },
+                        {
+                            "ip_address": "35.202.129.185",
+                            "time_to_retire": "",
+                            "type": "OUTGOING"
+                        },
+                        {
+                            "ip_address": "10.128.72.3",
+                            "time_to_retire": "",
+                            "type": "PRIVATE"
+                        }
+                    ],
+                    "master_instance_name": "",
+                    "name": "sundew-production-database-blue-suffix",
+                    "private_ip_address": "10.128.72.3",
+                    "project": "infrastructure-as-code-book",
+                    "public_ip_address": "34.66.126.191",
+                    "region": "us-central1",
+                    "replica_configuration": [],
+                    "restore_backup_context": [],
+                    "root_password": null,
+                    "self_link": "https://sqladmin.googleapis.com/sql/v1beta4/projects/infrastructure-as-code-book/instances/sundew-production-database-blue-suffix",
+                    "server_ca_cert": [
+                        {
+                            "cert": "REDACTED",
+                            "common_name": "C=US,O=Google\\, Inc,CN=Google Cloud SQL Server CA,dnQualifier=f5112cf9-caa1-4ae0-8df6-7afcdbebc452",
+                            "create_time": "2021-07-26T14:42:44.687Z",
+                            "expiration_time": "2031-07-24T14:43:44.687Z",
+                            "sha1_fingerprint": "3809c51814807c9bb28a31480fd90709d9bf81a1"
+                        }
+                    ],
+                    "service_account_email_address": "p974949786391-c8gclr@gcp-sa-cloud-sql.iam.gserviceaccount.com",
+                    "settings": [
+                        {
+                            "activation_policy": "ALWAYS",
+                            "authorized_gae_applications": [],
+                            "availability_type": "ZONAL",
+                            "backup_configuration": [
+                                {
+                                    "backup_retention_settings": [
+                                        {
+                                            "retained_backups": 7,
+                                            "retention_unit": "COUNT"
+                                        }
+                                    ],
+                                    "binary_log_enabled": false,
+                                    "enabled": false,
+                                    "location": "",
+                                    "point_in_time_recovery_enabled": false,
+                                    "start_time": "15:00",
+                                    "transaction_log_retention_days": 7
+                                }
+                            ],
+                            "crash_safe_replication": false,
+                            "database_flags": [],
+                            "disk_autoresize": true,
+                            "disk_autoresize_limit": 0,
+                            "disk_size": 10,
+                            "disk_type": "PD_SSD",
+                            "insights_config": [],
+                            "ip_configuration": [
+                                {
+                                    "authorized_networks": [],
+                                    "ipv4_enabled": true,
+                                    "private_network": "projects/infrastructure-as-code-book/global/networks/sundew-production-network-blue",
+                                    "require_ssl": false
+                                }
+                            ],
+                            "location_preference": [
+                                {
+                                    "follow_gae_application": "",
+                                    "zone": "us-central1-a"
+                                }
+                            ],
+                            "maintenance_window": [],
+                            "pricing_plan": "PER_USE",
+                            "replication_type": "SYNCHRONOUS",
+                            "tier": "db-f1-micro",
+                            "user_labels": {
+                                "automated": "true",
+                                "environment": "production",
+                                "team": "sundew"
+                            },
+                            "version": 1
+                        }
+                    ],
+                    "timeouts": null
+                },
+                "after": null,
+                "after_unknown": {},
+                "before_sensitive": {
+                    "clone": [],
+                    "ip_address": [
+                        {},
+                        {},
+                        {}
+                    ],
+                    "replica_configuration": [],
+                    "restore_backup_context": [],
+                    "root_password": true,
+                    "server_ca_cert": [
+                        {}
+                    ],
+                    "settings": [
+                        {
+                            "authorized_gae_applications": [],
+                            "backup_configuration": [
+                                {
+                                    "backup_retention_settings": [
+                                        {}
+                                    ]
+                                }
+                            ],
+                            "database_flags": [],
+                            "insights_config": [],
+                            "ip_configuration": [
+                                {
+                                    "authorized_networks": []
+                                }
+                            ],
+                            "location_preference": [
+                                {}
+                            ],
+                            "maintenance_window": [],
+                            "user_labels": {}
+                        }
+                    ]
+                },
+                "after_sensitive": false
+            }
+        }
+    ]
+}
