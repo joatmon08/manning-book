@@ -1,5 +1,6 @@
 import blue
 import green
+import database
 import passive
 import shared
 import json
@@ -9,7 +10,8 @@ if __name__ == "__main__":
         'resource':
         shared.build() +
         blue.build() +
-        green.build()
+        green.build() + 
+        database.build()
         #  passive.build() +
     }
 

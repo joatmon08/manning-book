@@ -23,7 +23,6 @@ labels = {
 
 def build():
     return network() + \
-        cluster() + \
         server0() + \
         server1() + \
         server2()
@@ -81,7 +80,7 @@ def cluster(name=cluster_name,
                         'name': node_name,
                         'node_config': [
                             {
-                                'machine_type': 'e2-medium',
+                                'machine_type': 'e2-micro',
                                 'oauth_scopes': [
                                     'https://www.googleapis.com/auth/cloud-platform'
                                 ],
@@ -89,7 +88,7 @@ def cluster(name=cluster_name,
                                 'service_account': f'${{google_service_account.{VERSION}.email}}'
                             }
                         ],
-                        'node_count': 1
+                        'node_count': 0
                     }
                 ]
             },

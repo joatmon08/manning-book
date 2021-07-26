@@ -180,48 +180,6 @@
             }
         },
         {
-            "google_container_cluster": {
-                "blue": [
-                    {
-                        "initial_node_count": 1,
-                        "location": "us-central1",
-                        "name": "sundew-production-cluster-blue",
-                        "network": "${google_compute_network.blue.name}",
-                        "remove_default_node_pool": true,
-                        "subnetwork": "${google_compute_subnetwork.blue.name}"
-                    }
-                ]
-            },
-            "google_container_node_pool": {
-                "blue": [
-                    {
-                        "cluster": "${google_container_cluster.blue.name}",
-                        "location": "us-central1",
-                        "name": "sundew-production-cluster-nodes-blue",
-                        "node_config": [
-                            {
-                                "machine_type": "e2-medium",
-                                "oauth_scopes": [
-                                    "https://www.googleapis.com/auth/cloud-platform"
-                                ],
-                                "preemptible": true,
-                                "service_account": "${google_service_account.blue.email}"
-                            }
-                        ],
-                        "node_count": 1
-                    }
-                ]
-            },
-            "google_service_account": {
-                "blue": [
-                    {
-                        "account_id": "sundew-production-sa-blue",
-                        "display_name": "sundew-production-sa-blue"
-                    }
-                ]
-            }
-        },
-        {
             "google_compute_instance": {
                 "blue_0": [
                     {
@@ -347,48 +305,6 @@
             }
         },
         {
-            "google_container_cluster": {
-                "green": [
-                    {
-                        "initial_node_count": 1,
-                        "location": "us-central1",
-                        "name": "sundew-production-cluster-green",
-                        "network": "${google_compute_network.green.name}",
-                        "remove_default_node_pool": true,
-                        "subnetwork": "${google_compute_subnetwork.green.name}"
-                    }
-                ]
-            },
-            "google_container_node_pool": {
-                "green": [
-                    {
-                        "cluster": "${google_container_cluster.green.name}",
-                        "location": "us-central1",
-                        "name": "sundew-production-cluster-nodes-green",
-                        "node_config": [
-                            {
-                                "machine_type": "e2-medium",
-                                "oauth_scopes": [
-                                    "https://www.googleapis.com/auth/cloud-platform"
-                                ],
-                                "preemptible": true,
-                                "service_account": "${google_service_account.green.email}"
-                            }
-                        ],
-                        "node_count": 1
-                    }
-                ]
-            },
-            "google_service_account": {
-                "green": [
-                    {
-                        "account_id": "sundew-production-sa-green",
-                        "display_name": "sundew-production-sa-green"
-                    }
-                ]
-            }
-        },
-        {
             "google_compute_instance": {
                 "green_0": [
                     {
@@ -486,6 +402,64 @@
                             }
                         ],
                         "zone": "us-central1-a"
+                    }
+                ]
+            }
+        },
+        {
+            "google_compute_global_address": {
+                "blue": [
+                    {
+                        "address_type": "INTERNAL",
+                        "name": "sundew-production-database-blue",
+                        "network": "${google_compute_network.blue.id}",
+                        "prefix_length": 24,
+                        "provider": "google-beta",
+                        "purpose": "VPC_PEERING"
+                    }
+                ]
+            },
+            "google_service_networking_connection": {
+                "blue": [
+                    {
+                        "network": "${google_compute_network.blue.id}",
+                        "provider": "google-beta",
+                        "reserved_peering_ranges": [
+                            "${google_compute_global_address.blue.name}"
+                        ],
+                        "service": "servicenetworking.googleapis.com"
+                    }
+                ]
+            }
+        },
+        {
+            "google_sql_database_instance": {
+                "blue": [
+                    {
+                        "database_version": "POSTGRES_12",
+                        "depends_on": [
+                            "google_service_networking_connection.blue"
+                        ],
+                        "name": "sundew-production-database-blue-suffix",
+                        "region": "us-central1",
+                        "settings": [
+                            {
+                                "ip_configuration": [
+                                    {
+                                        "private_network": "${google_compute_network.blue.id}"
+                                    }
+                                ],
+                                "location_preference": {
+                                    "zone": "us-central1-a"
+                                },
+                                "tier": "db-f1-micro",
+                                "user_labels": {
+                                    "automated": true,
+                                    "environment": "production",
+                                    "team": "sundew"
+                                }
+                            }
+                        ]
                     }
                 ]
             }
