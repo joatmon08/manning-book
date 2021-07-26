@@ -55,6 +55,7 @@ def database(name=name):
         'google_sql_database_instance': {
             VERSION: [{
                 'depends_on': [f'google_service_networking_connection.{VERSION}'],
+                'deletion_protection': False,
                 'region': REGION,
                 'database_version': 'POSTGRES_12',
                 'name': f'{name}-suffix',
