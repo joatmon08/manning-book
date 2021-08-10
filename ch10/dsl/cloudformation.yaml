@@ -1,0 +1,15 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Truncated example for CloudFormation feature flag
+Parameters:
+  EnableServerModule:
+    AllowedValues:
+      - 'true'
+      - 'false'
+    Default: 'false'
+    Description: Choose true to build servers with a module.
+    Type: String
+Conditions:
+  EnableServerModule: !Equals 
+    - !Ref EnableServerModule
+    - true
+## omitted for clarity
