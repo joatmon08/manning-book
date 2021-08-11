@@ -1,0 +1,346 @@
+{
+    "resource": [
+        {
+            "google_compute_backend_service": {
+                "blue": [
+                    {
+                        "backend": [
+                            {
+                                "group": "${google_compute_instance_group.blue.self_link}"
+                            }
+                        ],
+                        "health_checks": [
+                            "${google_compute_health_check.sundew.id}"
+                        ],
+                        "load_balancing_scheme": "INTERNAL_SELF_MANAGED",
+                        "locality_lb_policy": "ROUND_ROBIN",
+                        "name": "sundew-production-shared-blue",
+                        "provider": "google-beta"
+                    }
+                ]
+            },
+            "google_compute_instance_group": {
+                "blue": [
+                    {
+                        "description": "blue server instance group",
+                        "instances": [
+                            "${google_compute_instance.blue_0.id}",
+                            "${google_compute_instance.blue_1.id}",
+                            "${google_compute_instance.blue_2.id}"
+                        ],
+                        "name": "sundew-production-shared-blue",
+                        "named_port": [
+                            {
+                                "name": "http",
+                                "port": "8080"
+                            }
+                        ],
+                        "zone": "us-central1-a"
+                    }
+                ]
+            }
+        },
+        {
+            "google_compute_global_forwarding_rule": {
+                "sundew": [
+                    {
+                        "ip_address": "0.0.0.0",
+                        "load_balancing_scheme": "INTERNAL_SELF_MANAGED",
+                        "name": "sundew-production-shared",
+                        "port_range": "80",
+                        "target": "${google_compute_target_http_proxy.sundew.id}"
+                    }
+                ]
+            },
+            "google_compute_health_check": {
+                "sundew": [
+                    {
+                        "http_health_check": [
+                            {
+                                "port": 8080
+                            }
+                        ],
+                        "name": "sundew-production-shared",
+                        "provider": "google-beta"
+                    }
+                ]
+            },
+            "google_compute_target_http_proxy": {
+                "sundew": [
+                    {
+                        "description": "Target proxy for sundew",
+                        "name": "sundew-production-shared",
+                        "url_map": "${google_compute_url_map.sundew.id}"
+                    }
+                ]
+            },
+            "google_compute_url_map": {
+                "sundew": [
+                    {
+                        "default_service": "${google_compute_backend_service.blue.id}",
+                        "description": "URL Map for sundew",
+                        "host_rule": [
+                            {
+                                "hosts": [
+                                    "sundew.dc4plants.com"
+                                ],
+                                "path_matcher": "allpaths"
+                            }
+                        ],
+                        "name": "sundew-production-shared",
+                        "path_matcher": [
+                            {
+                                "default_service": "${google_compute_backend_service.blue.id}",
+                                "name": "allpaths",
+                                "path_rule": [
+                                    {
+                                        "paths": [
+                                            "/*"
+                                        ],
+                                        "route_action": {
+                                            "weighted_backend_services": [
+                                                {
+                                                    "backend_service": "${google_compute_backend_service.blue.id}",
+                                                    "weight": 90
+                                                }
+                                            ]
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "google_compute_network": {
+                "blue": [
+                    {
+                        "auto_create_subnetworks": false,
+                        "name": "sundew-production-network-blue"
+                    }
+                ]
+            }
+        },
+        {
+            "google_compute_subnetwork": {
+                "blue": [
+                    {
+                        "ip_cidr_range": "10.0.0.0/24",
+                        "name": "sundew-production-network-blue-subnet",
+                        "network": "${google_compute_network.blue.name}",
+                        "region": "us-central1"
+                    }
+                ]
+            }
+        },
+        {
+            "google_compute_instance": {
+                "blue_0": [
+                    {
+                        "allow_stopping_for_update": true,
+                        "boot_disk": [
+                            {
+                                "initialize_params": [
+                                    {
+                                        "image": "ubuntu-1804-lts"
+                                    }
+                                ]
+                            }
+                        ],
+                        "labels": {
+                            "automated": true,
+                            "environment": "production",
+                            "team": "sundew"
+                        },
+                        "machine_type": "e2-micro",
+                        "name": "sundew-production-server-blue-0",
+                        "network_interface": [
+                            {
+                                "access_config": {
+                                    "network_tier": "STANDARD"
+                                },
+                                "subnetwork": "${google_compute_subnetwork.blue.name}"
+                            }
+                        ],
+                        "zone": "us-central1-a"
+                    }
+                ]
+            }
+        },
+        {
+            "google_compute_instance": {
+                "blue_1": [
+                    {
+                        "allow_stopping_for_update": true,
+                        "boot_disk": [
+                            {
+                                "initialize_params": [
+                                    {
+                                        "image": "ubuntu-1804-lts"
+                                    }
+                                ]
+                            }
+                        ],
+                        "labels": {
+                            "automated": true,
+                            "environment": "production",
+                            "team": "sundew"
+                        },
+                        "machine_type": "e2-micro",
+                        "name": "sundew-production-server-blue-1",
+                        "network_interface": [
+                            {
+                                "access_config": {
+                                    "network_tier": "STANDARD"
+                                },
+                                "subnetwork": "${google_compute_subnetwork.blue.name}"
+                            }
+                        ],
+                        "zone": "us-central1-a"
+                    }
+                ]
+            }
+        },
+        {
+            "google_compute_instance": {
+                "blue_2": [
+                    {
+                        "allow_stopping_for_update": true,
+                        "boot_disk": [
+                            {
+                                "initialize_params": [
+                                    {
+                                        "image": "ubuntu-1804-lts"
+                                    }
+                                ]
+                            }
+                        ],
+                        "labels": {
+                            "automated": true,
+                            "environment": "production",
+                            "team": "sundew"
+                        },
+                        "machine_type": "e2-micro",
+                        "name": "sundew-production-server-blue-2",
+                        "network_interface": [
+                            {
+                                "access_config": {
+                                    "network_tier": "STANDARD"
+                                },
+                                "subnetwork": "${google_compute_subnetwork.blue.name}"
+                            }
+                        ],
+                        "zone": "us-central1-a"
+                    }
+                ]
+            }
+        },
+        {
+            "google_compute_instance": {
+                "module_blue_0": {
+                    "allow_stopping_for_update": true,
+                    "boot_disk": [
+                        {
+                            "initialize_params": [
+                                {
+                                    "image": "ubuntu-1804-lts"
+                                }
+                            ]
+                        }
+                    ],
+                    "depends_on": [
+                        "google_compute_subnetwork.blue"
+                    ],
+                    "labels": {
+                        "automated": true,
+                        "environment": "production",
+                        "team": "sundew"
+                    },
+                    "machine_type": "e2-micro",
+                    "name": "module-sundew-production-server-blue-0",
+                    "network_interface": [
+                        {
+                            "access_config": [
+                                {}
+                            ],
+                            "subnetwork": "${google_compute_subnetwork.blue.name}"
+                        }
+                    ],
+                    "zone": "us-central1-a"
+                }
+            }
+        },
+        {
+            "google_compute_instance": {
+                "module_blue_1": {
+                    "allow_stopping_for_update": true,
+                    "boot_disk": [
+                        {
+                            "initialize_params": [
+                                {
+                                    "image": "ubuntu-1804-lts"
+                                }
+                            ]
+                        }
+                    ],
+                    "depends_on": [
+                        "google_compute_subnetwork.blue"
+                    ],
+                    "labels": {
+                        "automated": true,
+                        "environment": "production",
+                        "team": "sundew"
+                    },
+                    "machine_type": "e2-micro",
+                    "name": "module-sundew-production-server-blue-1",
+                    "network_interface": [
+                        {
+                            "access_config": [
+                                {}
+                            ],
+                            "subnetwork": "${google_compute_subnetwork.blue.name}"
+                        }
+                    ],
+                    "zone": "us-central1-a"
+                }
+            }
+        },
+        {
+            "google_compute_instance": {
+                "module_blue_2": {
+                    "allow_stopping_for_update": true,
+                    "boot_disk": [
+                        {
+                            "initialize_params": [
+                                {
+                                    "image": "ubuntu-1804-lts"
+                                }
+                            ]
+                        }
+                    ],
+                    "depends_on": [
+                        "google_compute_subnetwork.blue"
+                    ],
+                    "labels": {
+                        "automated": true,
+                        "environment": "production",
+                        "team": "sundew"
+                    },
+                    "machine_type": "e2-micro",
+                    "name": "module-sundew-production-server-blue-2",
+                    "network_interface": [
+                        {
+                            "access_config": [
+                                {}
+                            ],
+                            "subnetwork": "${google_compute_subnetwork.blue.name}"
+                        }
+                    ],
+                    "zone": "us-central1-a"
+                }
+            }
+        }
+    ]
+}

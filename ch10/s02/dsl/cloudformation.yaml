@@ -12,4 +12,8 @@ Conditions:
   EnableServerModule: !Equals 
     - !Ref EnableServerModule
     - true
-## omitted for clarity
+Resources:
+  ServerModule:
+    Type: AWS::CloudFormation::Stack
+    Condition: EnableServerModule
+    ## omitted for clarity
