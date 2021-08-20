@@ -65,11 +65,23 @@
             }
         },
         {
+            "google_service_account": [
+                {
+                    "audit_team": [
+                        {
+                            "account_id": "audit-team",
+                            "display_name": "audit-team"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
             "google_project_iam_member": [
                 {
-                    "group_audit_team_sundew_com": [
+                    "audit_team": [
                         {
-                            "member": "group:audit-team@sundew.com",
+                            "member": "serviceAccount:${google_service_account.audit_team.email}",
                             "role": "roles/viewer"
                         }
                     ]
@@ -77,12 +89,12 @@
             ]
         },
         {
-            "google_project_iam_member": [
+            "google_service_account": [
                 {
-                    "automation_watering_sundew_com": [
+                    "automation_watering": [
                         {
-                            "member": "automation-watering@sundew.com",
-                            "role": "roles/editor"
+                            "account_id": "automation-watering",
+                            "display_name": "automation-watering"
                         }
                     ]
                 }
@@ -91,9 +103,33 @@
         {
             "google_project_iam_member": [
                 {
-                    "user_02_sundew_com": [
+                    "automation_watering": [
                         {
-                            "member": "user-02@sundew.com",
+                            "member": "serviceAccount:${google_service_account.automation_watering.email}",
+                            "role": "roles/editor"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "google_service_account": [
+                {
+                    "user_02": [
+                        {
+                            "account_id": "user-02",
+                            "display_name": "user-02"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "google_project_iam_member": [
+                {
+                    "user_02": [
+                        {
+                            "member": "serviceAccount:${google_service_account.user_02.email}",
                             "role": "roles/owner"
                         }
                     ]

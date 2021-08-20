@@ -1,0 +1,76 @@
+{
+    "resource": [
+        {
+            "google_service_account": [
+                {
+                    "audit_team": [
+                        {
+                            "account_id": "audit-team",
+                            "display_name": "audit-team"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "google_project_iam_member": [
+                {
+                    "audit_team": [
+                        {
+                            "member": "serviceAccount:${google_service_account.audit_team.email}",
+                            "role": "roles/viewer"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "google_service_account": [
+                {
+                    "automation_watering": [
+                        {
+                            "account_id": "automation-watering",
+                            "display_name": "automation-watering"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "google_project_iam_member": [
+                {
+                    "automation_watering": [
+                        {
+                            "member": "serviceAccount:${google_service_account.automation_watering.email}",
+                            "role": "roles/editor"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "google_service_account": [
+                {
+                    "user_02": [
+                        {
+                            "account_id": "user-02",
+                            "display_name": "user-02"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "google_project_iam_member": [
+                {
+                    "user_02": [
+                        {
+                            "member": "serviceAccount:${google_service_account.user_02.email}",
+                            "role": "roles/owner"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
