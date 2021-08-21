@@ -1,0 +1,46 @@
+{
+    "resource": [
+        {
+            "google_container_cluster": {
+                "blue": [
+                    {
+                        "initial_node_count": 1,
+                        "location": "us-central1",
+                        "name": "sundew-production-cluster-blue",
+                        "network": "sundew-production-network-blue",
+                        "remove_default_node_pool": true,
+                        "subnetwork": "sundew-production-network-blue-subnet"
+                    }
+                ]
+            },
+            "google_container_node_pool": {
+                "blue": [
+                    {
+                        "cluster": "${google_container_cluster.blue.name}",
+                        "location": "us-central1",
+                        "name": "sundew-production-cluster-nodes-blue",
+                        "node_config": [
+                            {
+                                "machine_type": "e2-micro",
+                                "oauth_scopes": [
+                                    "https://www.googleapis.com/auth/cloud-platform"
+                                ],
+                                "preemptible": true,
+                                "service_account": "${google_service_account.blue.email}"
+                            }
+                        ],
+                        "node_count": 0
+                    }
+                ]
+            },
+            "google_service_account": {
+                "blue": [
+                    {
+                        "account_id": "sundew-production-sa-blue",
+                        "display_name": "sundew-production-sa-blue"
+                    }
+                ]
+            }
+        }
+    ]
+}

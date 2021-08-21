@@ -1,57 +1,41 @@
+import googleapiclient.discovery
+import os
+
+PROJECT = os.environ['CLOUDSDK_CORE_PROJECT']
 TEAM = 'sundew'
 ENVIRONMENT = 'production'
 VERSION = 'blue'
 REGION = 'us-central1'
-IP_RANGE = '10.0.0.0/24'
-
-zone = f'{REGION}-a'
-network_name = f'{TEAM}-{ENVIRONMENT}-network-{VERSION}'
 
 cluster_name = f'{TEAM}-{ENVIRONMENT}-cluster-{VERSION}'
 cluster_nodes = f'{TEAM}-{ENVIRONMENT}-cluster-nodes-{VERSION}'
 cluster_service_account = f'{TEAM}-{ENVIRONMENT}-sa-{VERSION}'
 
-labels = {
-    'team': TEAM,
-    'environment': ENVIRONMENT,
-    'automated': True
-}
+
+def _get_network_from_gcp():
+    service = googleapiclient.discovery.build(
+        'compute', 'v1')
+    result = service.subnetworks().list(
+        project=PROJECT,
+        region=REGION,
+        filter=f'name:"{TEAM}-{ENVIRONMENT}-*"').execute()
+    subnetworks = result['items'] if 'items' in result else None
+    if len(subnetworks) != 1:
+        print("Network not found")
+        exit(1)
+    return subnetworks[0]['network'].split('/')[-1], \
+        subnetworks[0]['name']
 
 
 def build():
-    return network() + \
-        cluster()
-
-
-def network(name=network_name,
-            region=REGION,
-            ip_range=IP_RANGE):
-    return [
-        {
-            'google_compute_network': {
-                VERSION: [{
-                    'name': name,
-                    'auto_create_subnetworks': False
-                }]
-            }
-        },
-        {
-            'google_compute_subnetwork': {
-                VERSION: [{
-                    'name': f'{name}-subnet',
-                    'region': region,
-                    'network': f'${{google_compute_network.{VERSION}.name}}',
-                    'ip_cidr_range': ip_range
-                }]
-            }
-        }
-    ]
+    return cluster()
 
 
 def cluster(name=cluster_name,
             node_name=cluster_nodes,
             service_account=cluster_service_account,
             region=REGION):
+    network, subnet = _get_network_from_gcp()
     return [
         {
             'google_container_cluster': {
@@ -61,25 +45,30 @@ def cluster(name=cluster_name,
                         'location': region,
                         'name': name,
                         'remove_default_node_pool': True,
-                        'network': f'${{google_compute_network.{VERSION}.name}}',
-                        'subnetwork': f'${{google_compute_subnetwork.{VERSION}.name}}'
+                        'network': network,
+                        'subnetwork': subnet
                     }
                 ]
             },
             'google_container_node_pool': {
                 VERSION: [
                     {
-                        'cluster': f'${{google_container_cluster.{VERSION}.name}}',
+                        'cluster':
+                        '${google_container_cluster.' +
+                            f'{VERSION}' + '.name}',
                         'location': region,
                         'name': node_name,
                         'node_config': [
                             {
                                 'machine_type': 'e2-micro',
                                 'oauth_scopes': [
-                                    'https://www.googleapis.com/auth/cloud-platform'
+                                    'https://www.googleapis.com/' +
+                                    'auth/cloud-platform'
                                 ],
                                 'preemptible': True,
-                                'service_account': f'${{google_service_account.{VERSION}.email}}'
+                                'service_account':
+                                '${google_service_account.' +
+                                    f'{VERSION}' + '.email}'
                             }
                         ],
                         'node_count': 0
