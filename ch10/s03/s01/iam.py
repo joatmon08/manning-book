@@ -1,4 +1,6 @@
 TEAM = 'sundew'
+TERRAFORM_GCP_SERVICE_ACCOUNT_TYPE = 'google_service_account'
+TERRAFORM_GCP_ROLE_ASSIGNMENT_TYPE = 'google_project_iam_member'
 
 users = {
     'audit-team': 'roles/viewer',
@@ -20,7 +22,7 @@ def iam(users=users):
     for user, role in users.items():
         user_id = get_user_id(user)
         iam_members.append({
-            'google_service_account': [{
+            TERRAFORM_GCP_SERVICE_ACCOUNT_TYPE: [{
                 user_id: [{
                     'account_id': user,
                     'display_name': user
@@ -28,7 +30,7 @@ def iam(users=users):
             }]
         })
         iam_members.append({
-            'google_project_iam_member': [{
+            TERRAFORM_GCP_ROLE_ASSIGNMENT_TYPE: [{
                 user_id: [{
                     'role': role,
                     'member': 'serviceAccount:${google_service_account.'

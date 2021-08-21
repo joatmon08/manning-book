@@ -35,7 +35,7 @@ def check_import_status(ret, err):
 def import_service_account(project_id, user_id, user_email):
     email = user_email.replace('serviceAccount:', '')
     command = ['terraform', 'import', '-no-color',
-               f'google_service_account.{user_id}',
+               f'{iam.TERRAFORM_GCP_SERVICE_ACCOUNT_TYPE}.{user_id}',
                f'projects/{project_id}/serviceAccounts/{email}']
     return _terraform(command)
 
@@ -43,7 +43,7 @@ def import_service_account(project_id, user_id, user_email):
 def import_project_iam_member(project_id, role,
                               user_id, user_email):
     command = ['terraform', 'import', '-no-color',
-               f'google_project_iam_member.{user_id}',
+               f'{iam.TERRAFORM_GCP_ROLE_ASSIGNMENT_TYPE}.{user_id}',
                f'{project_id} {role} {user_email}']
     return _terraform(command)
 
