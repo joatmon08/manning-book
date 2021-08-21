@@ -7,6 +7,10 @@ users = {
 }
 
 
+def get_user_id(user):
+    return user.replace('-', '_')
+
+
 def build():
     return iam()
 
@@ -14,7 +18,7 @@ def build():
 def iam(users=users):
     iam_members = []
     for user, role in users.items():
-        user_id = user.replace('-', '_')
+        user_id = get_user_id(user)
         iam_members.append({
             'google_service_account': [{
                 user_id: [{
