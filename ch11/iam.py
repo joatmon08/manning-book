@@ -18,16 +18,5 @@ class Module():
                         }
                     ]
                 }
-            },
-            {
-                'google_project_iam_member': {
-                    self._environment: {
-                        'project': self._project,
-                        'role': 'roles/cloudsql.admin',
-                        'member': 'serviceAccount:' + 
-                        '${google_service_account.' +
-                        f'{self._environment}' + '.email}'
-                    }
-                }
             }
         ]
