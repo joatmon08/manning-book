@@ -11,12 +11,14 @@ ENVIRONMENT = 'prod'
 REGION = 'us-central1'
 ZONE = 'us-central1-a'
 PROJECT = os.environ['CLOUDSDK_CORE_PROJECT']
+role = 'roles/cloudsql.admin'
 
 if __name__ == "__main__":
     resources = {
         'resource':
         network.Module(SERVICE, ENVIRONMENT, REGION).build() +
-        iam.Module(SERVICE, ENVIRONMENT, REGION, PROJECT).build() +
+        iam.Module(SERVICE, ENVIRONMENT, REGION, PROJECT,
+                   role).build() +
         database.Module(SERVICE, ENVIRONMENT, REGION).build() +
         server.Module(SERVICE, ENVIRONMENT, ZONE).build()
     }
