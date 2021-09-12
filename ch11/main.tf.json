@@ -1,0 +1,126 @@
+{
+    "resource": [
+        {
+            "google_compute_network": {
+                "prod": {
+                    "auto_create_subnetworks": false,
+                    "name": "promotions-prod"
+                }
+            }
+        },
+        {
+            "google_compute_subnetwork": {
+                "prod": {
+                    "ip_cidr_range": "10.0.0.0/24",
+                    "name": "promotions-prod",
+                    "network": "${google_compute_network.prod.name}",
+                    "region": "us-central1"
+                }
+            }
+        },
+        {
+            "google_compute_global_address": {
+                "prod": {
+                    "address_type": "INTERNAL",
+                    "name": "promotions-prod",
+                    "network": "${google_compute_network.prod.id}",
+                    "prefix_length": 24,
+                    "provider": "google-beta",
+                    "purpose": "VPC_PEERING"
+                }
+            }
+        },
+        {
+            "google_service_networking_connection": {
+                "prod": {
+                    "network": "${google_compute_network.prod.id}",
+                    "provider": "google-beta",
+                    "reserved_peering_ranges": [
+                        "${google_compute_global_address.prod.name}"
+                    ],
+                    "service": "servicenetworking.googleapis.com"
+                }
+            }
+        },
+        {
+            "google_service_account": {
+                "prod": [
+                    {
+                        "account_id": "promotions-prod",
+                        "display_name": "promotions-prod"
+                    }
+                ]
+            }
+        },
+        {
+            "google_project_iam_member": {
+                "prod": {
+                    "member": "serviceAccount:${google_service_account.prod.email}",
+                    "project": "infrastructure-as-code-book",
+                    "role": "roles/cloudsql.admin"
+                }
+            }
+        },
+        {
+            "google_sql_database": {
+                "prod": {
+                    "instance": "${google_sql_database_instance.prod.name}",
+                    "name": "promotions-prod"
+                }
+            }
+        },
+        {
+            "google_sql_database_instance": {
+                "prod": {
+                    "deletion_protection": false,
+                    "depends_on": [
+                        "google_service_networking_connection.prod"
+                    ],
+                    "region": "us-central1",
+                    "settings": {
+                        "ip_configuration": {
+                            "ipv4_enabled": false,
+                            "private_network": "${google_compute_network.prod.id}"
+                        },
+                        "tier": "db-f1-micro"
+                    }
+                }
+            }
+        },
+        {
+            "google_compute_instance": {
+                "prod": {
+                    "allow_stopping_for_update": true,
+                    "boot_disk": [
+                        {
+                            "initialize_params": [
+                                {
+                                    "image": "ubuntu-1804-lts"
+                                }
+                            ]
+                        }
+                    ],
+                    "machine_type": "e2-micro",
+                    "name": "promotions-prod",
+                    "network_interface": [
+                        {
+                            "access_config": {
+                                "network_tier": "STANDARD"
+                            },
+                            "subnetwork": "${google_compute_subnetwork.prod.name}"
+                        }
+                    ],
+                    "service_account": [
+                        {
+                            "email": "${google_service_account.prod.email}",
+                            "scopes": [
+                                "cloud-platform"
+                            ]
+                        }
+                    ],
+                    "zone": "us-central1-a"
+                }
+            }
+        }
+    ]
+}
