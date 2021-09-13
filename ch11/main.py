@@ -11,7 +11,7 @@ ENVIRONMENT = 'prod'
 REGION = 'us-central1'
 ZONE = 'us-central1-a'
 PROJECT = os.environ['CLOUDSDK_CORE_PROJECT']
-role = 'roles/cloudsql.admin'
+role = 'roles/cloudsql.client'
 
 if __name__ == "__main__":
     resources = {

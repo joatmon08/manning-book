@@ -57,7 +57,7 @@
                 "prod": {
                     "member": "serviceAccount:${google_service_account.prod.email}",
                     "project": "infrastructure-as-code-book",
-                    "role": "roles/cloudsql.admin"
+                    "role": "roles/cloudsql.client"
                 }
             }
         },
@@ -101,6 +101,7 @@
                         }
                     ],
                     "machine_type": "e2-micro",
+                    "metadata_startup_script": "\n        #!/bin/bash\n        wget https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O /usr/local/bin/cloud_sql_proxy\n        chmod +x /usr/local/bin/cloud_sql_proxy\n        \n        cat << EOF > /usr/lib/systemd/system/cloudsqlproxy.service\n        [Install]\n        WantedBy=multi-user.target\n\n        [Unit]\n        Description=Google Cloud Compute Engine SQL Proxy\n        Requires=networking.service\n        After=networking.service\n\n        [Service]\n        Type=simple\n        WorkingDirectory=/usr/local/bin\n        ExecStart=/usr/local/bin/cloud_sql_proxy -instances=${google_sql_database_instance.prod.connection_name}=tcp:3306\n        Restart=always\n        StandardOutput=journal\n        User=root\n        EOF\n\n        systemctl daemon-reload\n        systemctl start cloudsqlproxy\n        ",
                     "name": "promotions-prod",
                     "network_interface": [
                         {
