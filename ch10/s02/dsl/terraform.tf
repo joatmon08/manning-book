@@ -5,6 +5,6 @@ variable "enable_server_module" {
 }
 
 module "server" {
-  count   = var.enable_server_module ? 1 : 0
+  count = var.enable_server_module ? 1 : 0
   ## omitted for clarity
 }
