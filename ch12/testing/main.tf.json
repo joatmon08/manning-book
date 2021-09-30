@@ -1,0 +1,60 @@
+{
+    "resource": [
+        {
+            "google_compute_instance": {
+                "testing-server-0": {
+                    "allow_stopping_for_update": true,
+                    "boot_disk": [
+                        {
+                            "initialize_params": [
+                                {
+                                    "image": "ubuntu-1804-lts"
+                                }
+                            ]
+                        }
+                    ],
+                    "labels": {
+                        "name": "testing-server-0",
+                        "purpose": "manning-infrastructure-as-code"
+                    },
+                    "machine_type": "n2d-standard-8",
+                    "name": "testing-server-0",
+                    "network_interface": [
+                        {
+                            "network": "default"
+                        }
+                    ],
+                    "zone": "us-central1-a"
+                }
+            }
+        },
+        {
+            "google_compute_instance": {
+                "testing-server-1": {
+                    "allow_stopping_for_update": true,
+                    "boot_disk": [
+                        {
+                            "initialize_params": [
+                                {
+                                    "image": "ubuntu-1804-lts"
+                                }
+                            ]
+                        }
+                    ],
+                    "labels": {
+                        "name": "testing-server-1",
+                        "purpose": "manning-infrastructure-as-code"
+                    },
+                    "machine_type": "n2d-standard-8",
+                    "name": "testing-server-1",
+                    "network_interface": [
+                        {
+                            "network": "default"
+                        }
+                    ],
+                    "zone": "us-central1-a"
+                }
+            }
+        }
+    ]
+}

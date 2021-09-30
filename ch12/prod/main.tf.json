@@ -1,0 +1,144 @@
+{
+    "resource": [
+        {
+            "google_compute_instance": {
+                "prod-server-conf-0": {
+                    "allow_stopping_for_update": true,
+                    "boot_disk": [
+                        {
+                            "initialize_params": [
+                                {
+                                    "image": "ubuntu-1804-lts"
+                                }
+                            ]
+                        }
+                    ],
+                    "labels": {
+                        "name": "prod-server-conf-0",
+                        "purpose": "manning-infrastructure-as-code"
+                    },
+                    "machine_type": "n2d-standard-16",
+                    "name": "prod-server-conf-0",
+                    "network_interface": [
+                        {
+                            "network": "default"
+                        }
+                    ],
+                    "zone": "us-central1-a"
+                }
+            }
+        },
+        {
+            "google_compute_instance": {
+                "prod-server-conf-1": {
+                    "allow_stopping_for_update": true,
+                    "boot_disk": [
+                        {
+                            "initialize_params": [
+                                {
+                                    "image": "ubuntu-1804-lts"
+                                }
+                            ]
+                        }
+                    ],
+                    "labels": {
+                        "name": "prod-server-conf-1",
+                        "purpose": "manning-infrastructure-as-code"
+                    },
+                    "machine_type": "n2d-standard-16",
+                    "name": "prod-server-conf-1",
+                    "network_interface": [
+                        {
+                            "network": "default"
+                        }
+                    ],
+                    "zone": "us-central1-a"
+                }
+            }
+        },
+        {
+            "google_compute_instance": {
+                "prod-server-0": {
+                    "allow_stopping_for_update": true,
+                    "boot_disk": [
+                        {
+                            "initialize_params": [
+                                {
+                                    "image": "ubuntu-1804-lts"
+                                }
+                            ]
+                        }
+                    ],
+                    "labels": {
+                        "name": "prod-server-0",
+                        "purpose": "manning-infrastructure-as-code"
+                    },
+                    "machine_type": "n2d-standard-32",
+                    "name": "prod-server-0",
+                    "network_interface": [
+                        {
+                            "network": "default"
+                        }
+                    ],
+                    "zone": "us-central1-a"
+                }
+            }
+        },
+        {
+            "google_compute_instance": {
+                "prod-server-1": {
+                    "allow_stopping_for_update": true,
+                    "boot_disk": [
+                        {
+                            "initialize_params": [
+                                {
+                                    "image": "ubuntu-1804-lts"
+                                }
+                            ]
+                        }
+                    ],
+                    "labels": {
+                        "name": "prod-server-1",
+                        "purpose": "manning-infrastructure-as-code"
+                    },
+                    "machine_type": "n2d-standard-32",
+                    "name": "prod-server-1",
+                    "network_interface": [
+                        {
+                            "network": "default"
+                        }
+                    ],
+                    "zone": "us-central1-a"
+                }
+            }
+        },
+        {
+            "google_compute_instance": {
+                "prod-server-2": {
+                    "allow_stopping_for_update": true,
+                    "boot_disk": [
+                        {
+                            "initialize_params": [
+                                {
+                                    "image": "ubuntu-1804-lts"
+                                }
+                            ]
+                        }
+                    ],
+                    "labels": {
+                        "name": "prod-server-2",
+                        "purpose": "manning-infrastructure-as-code"
+                    },
+                    "machine_type": "n2d-standard-32",
+                    "name": "prod-server-2",
+                    "network_interface": [
+                        {
+                            "network": "default"
+                        }
+                    ],
+                    "zone": "us-central1-a"
+                }
+            }
+        }
+    ]
+}
