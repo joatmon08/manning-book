@@ -1,5 +1,53 @@
 {
+    "data": [
+        {
+            "google_project": {
+                "project": {}
+            }
+        }
+    ],
     "resource": [
+        {
+            "google_project_iam_custom_role": {
+                "weekend": {
+                    "permissions": [
+                        "compute.instances.start",
+                        "compute.instances.stop"
+                    ],
+                    "role_id": "weekendShutdown",
+                    "title": "Weekend Shutdown of Servers"
+                }
+            }
+        },
+        {
+            "google_project_iam_binding": {
+                "weekend": {
+                    "members": [
+                        "serviceAccount:service-${data.google_project.project.number}@compute-system.iam.gserviceaccount.com"
+                    ],
+                    "role": "${google_project_iam_custom_role.weekend.id}"
+                }
+            }
+        },
+        {
+            "google_compute_resource_policy": {
+                "weekend": {
+                    "description": "start and stop instances over the weekend",
+                    "instance_schedule_policy": {
+                        "expiration_time": "2021-12-03T00:00:00Z",
+                        "time_zone": "US/Central",
+                        "vm_start_schedule": {
+                            "schedule": "0 0 * * MON"
+                        },
+                        "vm_stop_schedule": {
+                            "schedule": "0 0 * * SAT"
+                        }
+                    },
+                    "name": "testing-schedule",
+                    "region": "us-central1"
+                }
+            }
+        },
         {
             "google_compute_instance": {
                 "testing-server-0": {
@@ -23,6 +71,9 @@
                         {
                             "network": "default"
                         }
+                    ],
+                    "resource_policies": [
+                        "${google_compute_resource_policy.weekend.id}"
                     ],
                     "zone": "us-central1-a"
                 }
@@ -51,6 +102,9 @@
                         {
                             "network": "default"
                         }
+                    ],
+                    "resource_policies": [
+                        "${google_compute_resource_policy.weekend.id}"
                     ],
                     "zone": "us-central1-a"
                 }

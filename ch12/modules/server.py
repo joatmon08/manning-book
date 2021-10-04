@@ -1,5 +1,7 @@
+import schedule
+
 def build(name, machine_type, zone,
-          network='default',):
+          network='default'):
     return {
         'google_compute_instance': {
             name: {
@@ -15,6 +17,7 @@ def build(name, machine_type, zone,
                 'network_interface': [{
                     'network': network
                 }],
+                'resource_policies': [schedule.id()],
                 'labels': {
                     'name': name,
                     'purpose':

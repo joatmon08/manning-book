@@ -1,24 +1,22 @@
 import googleapiclient.discovery
-import re
 
 
 class MachineType():
     def __init__(self, gcp_json):
         self.name = gcp_json['name']
         self.description = gcp_json['description']
-        self.cpus, self.ram = self._parse_cpu_and_ram()
+        self.cpus = gcp_json['guestCpus']
+        self.ram = self._convert_mb_to_gb(
+            gcp_json['memoryMb'])
         self.maxPersistentDisks = gcp_json[
             'maximumPersistentDisks']
         self.maxPersistentDiskSizeGb = gcp_json[
             'maximumPersistentDisksSizeGb']
         self.isSharedCpu = gcp_json['isSharedCpu']
 
-    def _parse_cpu_and_ram(self):
-        result = re.search(
-            f"([0-9]+) vCPUs ([0-9]+) GB RAM",
-            self.description)
-        cpu, ram = result.groups()
-        return int(cpu), int(ram)
+    def _convert_mb_to_gb(self, mb):
+        GIGABYTE = 1.0/1024
+        return GIGABYTE * mb
 
 
 def get_machine_type(project, zone, type):

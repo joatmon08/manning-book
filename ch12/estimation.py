@@ -9,14 +9,14 @@ class ComputeSKU:
         self.billing = \
             billing_v1.services.cloud_catalog.CloudCatalogClient()
         self.service_name = service_name
-        self.family, purpose, _ = \
-            machine_type.split('-')
+        type_name = machine_type.split('-')
+        self.family = type_name[0]
         self.exclude = [
             'custom',
             'preemptible',
             'sole tenancy',
             'commitment'
-        ] if purpose == 'standard' else []
+        ] if type_name[1] == 'standard' else []
 
     def _filter(self, description):
         return not any(
