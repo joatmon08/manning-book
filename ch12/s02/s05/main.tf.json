@@ -1,0 +1,35 @@
+{
+    "resource": [
+        {
+            "google_compute_instance": {
+                "testing-server-sandbox-0": {
+                    "allow_stopping_for_update": true,
+                    "boot_disk": [
+                        {
+                            "initialize_params": [
+                                {
+                                    "image": "ubuntu-1804-lts"
+                                }
+                            ]
+                        }
+                    ],
+                    "labels": {
+                        "automated": true,
+                        "cost_center": 123456,
+                        "customer": "community",
+                        "environment": "testing",
+                        "expiration": "2021-10-14"
+                    },
+                    "machine_type": "e2-micro",
+                    "name": "testing-server-sandbox-0",
+                    "network_interface": [
+                        {
+                            "network": "default"
+                        }
+                    ],
+                    "zone": "us-central1-a"
+                }
+            }
+        }
+    ]
+}
