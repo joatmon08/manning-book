@@ -1,0 +1,70 @@
+{
+    "resource": [
+        {
+            "google_compute_instance_template": {
+                "prod": {
+                    "can_ip_forward": false,
+                    "disk": {
+                        "source_image": "ubuntu-1804-lts"
+                    },
+                    "labels": {
+                        "name": "prod",
+                        "purpose": "manning-infrastructure-as-code"
+                    },
+                    "machine_type": "e2-micro",
+                    "name": "prod",
+                    "network_interface": {
+                        "network": "default"
+                    }
+                }
+            }
+        },
+        {
+            "google_compute_target_pool": {
+                "prod": {
+                    "name": "prod",
+                    "region": "us-central1"
+                }
+            }
+        },
+        {
+            "google_compute_instance_group_manager": {
+                "prod": {
+                    "base_instance_name": "prod",
+                    "name": "prod",
+                    "target_pools": [
+                        "${google_compute_target_pool.prod.id}"
+                    ],
+                    "version": {
+                        "instance_template": "${google_compute_instance_template.prod.id}"
+                    },
+                    "zone": "us-central1-a"
+                }
+            }
+        },
+        {
+            "google_compute_autoscaler": {
+                "prod": {
+                    "autoscaling_policy": {
+                        "cooldown_period": 60,
+                        "cpu_utilization": {
+                            "target": 0.75
+                        },
+                        "max_replicas": 3,
+                        "min_replicas": 0,
+                        "scaling_schedules": {
+                            "duration_sec": "57600",
+                            "min_required_replicas": 1,
+                            "name": "weekday-scaleup",
+                            "schedule": "0 6 * * MON-FRI",
+                            "time_zone": "US/Central"
+                        }
+                    },
+                    "name": "prod",
+                    "target": "${google_compute_instance_group_manager.prod.id}",
+                    "zone": "us-central1-a"
+                }
+            }
+        }
+    ]
+}
