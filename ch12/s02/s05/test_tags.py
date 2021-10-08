@@ -1,62 +1,43 @@
 import pytest
-import os
 import json
 
 CONFIGURATION_FILE = 'main.tf.json'
-
-PROJECT = os.environ['CLOUDSDK_CORE_PROJECT']
-
-MONTHTLY_COMPUTE_BUDGET = 4500
+exemptionS = 'exemptions.json'
 
 
 @pytest.fixture(scope="module")
 def configuration():
-    merged = []
-    for environment in ENVIRONMENTS:
-        with open(f'{environment}/{CONFIGURATION_FILE}', 'r') as f:
-            environment_configuration = json.load(f)
-            merged += environment_configuration['resource']
-    return merged
+    with open(CONFIGURATION_FILE, 'r') as f:
+        return json.load(f)
 
 
-def resources(configuration, resource_type):
-    resource_list = []
-    for resource in configuration:
-        if resource_type in resource.keys():
-            resource_name = list(
-                resource[resource_type].keys())[0]
-            resource_list.append(
-                resource[resource_type]
-                [resource_name])
-    return resource_list
+@pytest.fixture(scope='module')
+def exemptions():
+    with open(exemptionS, 'r') as f:
+        return json.load(f)
 
 
 @pytest.fixture
 def servers(configuration):
     servers = dict()
-    server_configs = resources(configuration,
-                               'google_compute_instance')
-    for server in server_configs:
-        region = server['zone'].rsplit('-', 1)[0]
-        machine_type = server['machine_type']
-        key = f'{region},{machine_type}'
-        if key not in servers:
-            type = get_machine_type(
-                PROJECT, server['zone'],
-                machine_type)
-            servers[key] = {
-                'type': type,
-                'num_servers': 1
-            }
-        else:
-            servers[key]['num_servers'] += 1
+    for resource in configuration['resource']:
+        if 'google_compute_instance' in resource.keys():
+            servers.update(resource['google_compute_instance'])
     return servers
 
 
-def test_monthly_compute_budget_not_exceeded(servers):
-    total = 0
-    for key, value in servers.items():
-        region, _ = key.split(',')
-        total += calculate_monthly_compute(value['type'], region) * \
-            value['num_servers']
-    assert total < MONTHTLY_COMPUTE_BUDGET
+@pytest.fixture
+def server_exemptions(exemptions):
+    return exemptions['google_compute_instance']
+
+
+def test_all_nonprod_resources_should_have_expiration_tag(
+        servers, server_exemptions):
+    noncompliant = []
+    for name, values in servers.items():
+        if 'expiration' not in values['labels'].keys() and \
+                name not in server_exemptions:
+            noncompliant.append(name)
+    assert len(noncompliant) == 0, \
+        'all nonprod resources should have ' + \
+        f'expiration tag, {noncompliant}'

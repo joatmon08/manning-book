@@ -2,10 +2,9 @@ from . import tags
 
 
 def build(name, environment, machine_type, zone,
-          network='default'):
+          network='default', long_term=False):
     labels = tags.DefaultTags(
-        environment).get()
-    print(labels)
+        environment, long_term).get()
     return {
         'google_compute_instance': {
             name: {

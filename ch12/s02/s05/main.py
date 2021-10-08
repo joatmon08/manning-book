@@ -13,7 +13,12 @@ if __name__ == "__main__":
         'resource': [
             server.build(
                 f'{ENVIRONMENT}-server-sandbox-0',
-                ENVIRONMENT, MACHINE_TYPE_SANDBOX, ZONE)
+                ENVIRONMENT, MACHINE_TYPE_SANDBOX, ZONE,
+                long_term=False),
+            server.build(
+                f'{ENVIRONMENT}-server-0',
+                ENVIRONMENT, MACHINE_TYPE_SANDBOX, ZONE,
+                long_term=True),
         ]
     }
 
