@@ -18,6 +18,7 @@ def configuration():
             merged += environment_configuration['resource']
     return merged
 
+
 def resources(configuration, resource_type):
     resource_list = []
     for resource in configuration:
@@ -46,4 +47,5 @@ def test_cpu_size_less_than_or_equal_to_limit(servers):
         if type.cpus > CPU_LIMIT:
             non_compliant_servers.append(server['name'])
     assert len(non_compliant_servers) == 0, \
-        f'Servers found using over {CPU_LIMIT} vCPUs'
+        f'Servers found using over {CPU_LIMIT}' + \
+        f' vCPUs: {non_compliant_servers}'
