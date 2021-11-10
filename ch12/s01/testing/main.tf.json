@@ -25,6 +25,7 @@
                     "members": [
                         "serviceAccount:service-${data.google_project.project.number}@compute-system.iam.gserviceaccount.com"
                     ],
+                    "project": "infrastructure-as-code-book",
                     "role": "${google_project_iam_custom_role.weekend.id}"
                 }
             }

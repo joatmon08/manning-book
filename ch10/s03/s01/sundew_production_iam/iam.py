@@ -1,3 +1,5 @@
+import os
+
 TEAM = 'sundew'
 TERRAFORM_GCP_SERVICE_ACCOUNT_TYPE = 'google_service_account'
 TERRAFORM_GCP_ROLE_ASSIGNMENT_TYPE = 'google_project_iam_member'
@@ -7,6 +9,8 @@ users = {
     'automation-watering': 'roles/editor',
     'user-02': 'roles/owner'
 }
+
+project = os.environ['CLOUDSDK_CORE_PROJECT']
 
 
 def get_user_id(user):
@@ -34,7 +38,8 @@ def iam(users=users):
                 user_id: [{
                     'role': role,
                     'member': 'serviceAccount:${google_service_account.'
-                    + f'{user_id}' + '.email}'
+                    + f'{user_id}' + '.email}',
+                    'project': project
                 }]
             }]
         })

@@ -51,7 +51,7 @@
                                 "automated": true,
                                 "environment": "development"
                             },
-                            "machine_type": "e2-micro",
+                            "machine_type": "f1-micro",
                             "name": "development-hello-world",
                             "network_interface": [
                                 {
@@ -84,6 +84,7 @@
                 {
                     "development-hello-world": [
                         {
+                            "database_version": "POSTGRES_12",
                             "deletion_protection": false,
                             "depends_on": [
                                 "google_compute_instance.development-hello-world"
@@ -100,7 +101,7 @@
                                             ]
                                         }
                                     ],
-                                    "tier": "db-e2-micro",
+                                    "tier": "db-f1-micro",
                                     "user_labels": {
                                         "automated": true,
                                         "environment": "development"

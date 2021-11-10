@@ -82,6 +82,7 @@
                     "audit_team": [
                         {
                             "member": "serviceAccount:${google_service_account.audit_team.email}",
+                            "project": "infrastructure-as-code-book",
                             "role": "roles/viewer"
                         }
                     ]
@@ -106,6 +107,7 @@
                     "automation_watering": [
                         {
                             "member": "serviceAccount:${google_service_account.automation_watering.email}",
+                            "project": "infrastructure-as-code-book",
                             "role": "roles/editor"
                         }
                     ]
@@ -130,6 +132,7 @@
                     "user_02": [
                         {
                             "member": "serviceAccount:${google_service_account.user_02.email}",
+                            "project": "infrastructure-as-code-book",
                             "role": "roles/owner"
                         }
                     ]

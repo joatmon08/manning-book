@@ -1,6 +1,7 @@
 import blue
 import iam
 import json
+import os
 
 if __name__ == "__main__":
     resources = {

@@ -1,4 +1,7 @@
 from datetime import datetime, timezone
+import os
+
+project = os.environ['CLOUDSDK_CORE_PROJECT']
 
 
 def iam():
@@ -28,7 +31,8 @@ def iam():
                 '.weekend.id}',
                 'members': [
                     f'serviceAccount:{compute_service_account}'
-                ]
+                ],
+                'project': project
             }
         }
     }]

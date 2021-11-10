@@ -1,5 +1,6 @@
 import json
 import iam
+import os
 
 
 def build_frontend_configuration():
@@ -9,8 +10,9 @@ def build_frontend_configuration():
         'roles/appengine.appAdmin',
         'roles/cloudsql.admin'
     ]
+    project = os.environ['CLOUDSDK_CORE_PROJECT']
 
-    frontend = iam.ApplicationFactoryModule(name, roles)
+    frontend = iam.ApplicationFactoryModule(name, roles, project)
     resources = {
         'resource': frontend._build()
     }

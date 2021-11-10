@@ -40,6 +40,7 @@
                 {
                     "development-frontend-database": [
                         {
+                            "database_version": "POSTGRES_12",
                             "deletion_protection": false,
                             "region": "us-central1",
                             "settings": [

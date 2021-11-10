@@ -17,7 +17,8 @@ class FirewallFactory:
                             }
                         ],
                         'name': self.name,
-                        'network': self.network
+                        'network': self.network,
+                        'source_ranges': ['0.0.0.0/0']
                     }
                 ]
             }

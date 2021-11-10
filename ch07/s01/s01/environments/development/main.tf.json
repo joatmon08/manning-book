@@ -84,6 +84,7 @@
                 {
                     "development-hello-world": [
                         {
+                            "database_version": "POSTGRES_12",
                             "deletion_protection": false,
                             "depends_on": [
                                 "google_compute_instance.development-hello-world"

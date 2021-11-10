@@ -2,9 +2,10 @@ import re
 
 
 class ApplicationFactoryModule:
-    def __init__(self, name, roles):
+    def __init__(self, name, roles, project):
         self._name = name
         self._roles = roles
+        self._project = project
         self.resources = self._build()
 
     def _set_roles(self):
@@ -15,7 +16,8 @@ class ApplicationFactoryModule:
                 role_name: {
                     'member':
                     f"serviceAccount:${{google_service_account.{self._name}.email}}",
-                    'role': role
+                    'role': role,
+                    'project': self._project
                 }
             })
         return role_members

@@ -18,7 +18,7 @@
                         "cost_center": 123456,
                         "customer": "community",
                         "environment": "testing",
-                        "expiration": "2021-10-15"
+                        "expiration": "2021-11-17"
                     },
                     "machine_type": "e2-micro",
                     "name": "testing-server-sandbox-0",

@@ -1,4 +1,4 @@
-from os import environ
+import os
 import database
 import iam
 import network

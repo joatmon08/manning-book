@@ -94,7 +94,10 @@
                                 }
                             ],
                             "name": "development-database",
-                            "network": "default"
+                            "network": "default",
+                            "source_ranges": [
+                                "0.0.0.0/0"
+                            ]
                         }
                     ]
                 }

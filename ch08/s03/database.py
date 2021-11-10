@@ -26,6 +26,7 @@ class DatabaseFactoryModule():
                 'google_sql_database_instance': [{
                     self._name: [{
                         'region': self._region,
+                        'database_version': 'POSTGRES_12',
                         'settings': [{
                             'tier': self._tier,
                             'user_labels': self._tags

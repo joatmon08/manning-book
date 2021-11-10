@@ -31,6 +31,7 @@ class DatabaseFactoryModule():
                             f'google_compute_instance.{self._server._name}'
                         ],
                         'region': self._region,
+                        'database_version': 'POSTGRES_12',
                         'settings': [{
                             'tier': self._tier,
                             'ip_configuration': [{

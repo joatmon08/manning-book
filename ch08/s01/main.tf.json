@@ -4,18 +4,21 @@
             {
                 "roles-compute-networkAdmin": {
                     "member": "serviceAccount:${google_service_account.frontend.email}",
+                    "project": "infrastructure-as-code-book",
                     "role": "roles/compute.networkAdmin"
                 }
             },
             {
                 "roles-appengine-appAdmin": {
                     "member": "serviceAccount:${google_service_account.frontend.email}",
+                    "project": "infrastructure-as-code-book",
                     "role": "roles/appengine.appAdmin"
                 }
             },
             {
                 "roles-cloudsql-admin": {
                     "member": "serviceAccount:${google_service_account.frontend.email}",
+                    "project": "infrastructure-as-code-book",
                     "role": "roles/cloudsql.admin"
                 }
             }
