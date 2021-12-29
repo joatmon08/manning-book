@@ -1,49 +1,37 @@
-# Note: This example will not apply successfully
-# with Terraform because it uses mock users and
-# groups. However, it will successfully pass a plan.
+import ipaddress
 
-import json
-
-GCP_PROJECT_USERS = [
-    (
-        'operations',
-        'group:team-operations@example.com',
-        'roles/editor'
-    ),
-    (
-        'inventory',
-        'group:inventory@example.com',
-        'roles/viewer'
-    )
-]
-
-
-class GCPProjectUsers:
-    def __init__(self, project, users):
-        self._project = project
-        self._users = users
+class ServerFactoryModule:
+    def __init__(self, name, network, zone='us-central1-a'):
+        self._name = name
+        self._network = network._network  # D
+        self._network_ip = self._allocate_fifth_ip_address(  # D
+            network._ip_cidr_range)  # D
+        self._zone = zone
         self.resources = self._build()
 
+    def _allocate_fifth_ip_address(self, ip_range):
+        ip = ipaddress.IPv4Network(ip_range)
+        return format(ip[5])
+
     def _build(self):
-        resources = []
-        for user, member, role in self._users:
-            resources.append({
-                'google_project_iam_member': [{
-                    user: [{
-                        'role': role,
-                        'member': member,
-                        'project': self._project
+        return {
+            'resource': [{
+                'google_compute_instance': [{
+                    self._name: [{
+                        'allow_stopping_for_update': True,
+                        'boot_disk': [{
+                            'initialize_params': [{
+                                'image': 'ubuntu-1804-lts'
+                            }]
+                        }],
+                        'machine_type': 'e2-micro',
+                        'name': self._name,
+                        'zone': self._zone,
+                        'network_interface': [{
+                            'subnetwork': self._network,
+                            'network_ip': self._network_ip
+                        }]
                     }]
                 }]
-            })
-        return {
-            'resource': resources
+            }]
         }
-
-
-if __name__ == "__main__":
-    with open('main.tf.json', 'w') as outfile:
-        json.dump(GCPProjectUsers(
-            'infrastructure-as-code-book',
-            GCP_PROJECT_USERS).resources, outfile,
-            sort_keys=True, indent=2)
