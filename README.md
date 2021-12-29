@@ -17,7 +17,7 @@ This repository includes code examples for
   - I use [pyenv](https://github.com/pyenv/pyenv)
     and [pyenv-virtualenv](https://github.com/pyenv/pyenv-virtualenv)
     to manage my Python versions.
-- Install Terraform 0.14 or higher.
+- Install Terraform 1.0 or higher.
 
 ## Installation
 
