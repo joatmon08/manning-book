@@ -5,7 +5,7 @@ from firewall import FirewallFactory
 
 
 class DatabaseModule:
-    def __init__(self, name) -> None:
+    def __init__(self, name):
         self._resources = []
         self._name = name
         self._resources = DatabaseServerFactory(

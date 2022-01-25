@@ -4,7 +4,6 @@ import json
 class Network:
     def __init__(self, region='us-central1'):
         self._network_name = 'my-network'
-        self._network_cidr = '10.0.0.0/16'
         self._subnet_name = f'{self._network_name}-subnet'
         self._subnet_cidr = '10.0.0.0/28'
         self._region = region
