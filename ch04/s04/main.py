@@ -58,8 +58,11 @@ class GCPProjectUsers:  # C
 
 
 if __name__ == "__main__":
-    users = GCPIdentityAdapter(access.Infrastructure().resources).outputs()
+    users = GCPIdentityAdapter(
+        access.Infrastructure().resources).outputs()
 
     with open('main.tf.json', 'w') as outfile:
-        json.dump(GCPProjectUsers('infrastructure-as-code-book',
-                                  users).resources, outfile, sort_keys=True, indent=4)
+        json.dump(
+            GCPProjectUsers(
+                'infrastructure-as-code-book',
+                users).resources, outfile, sort_keys=True, indent=4)

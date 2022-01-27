@@ -5,7 +5,8 @@ This repository includes code examples for
 
 > Note: For clarity and cost, some of the examples have been abbreviated.
   As a result, not all infrastructure resources will register as healthy or error
-  free. READMEs in each section will provide additional information.
+  free. Certain sections have READMEs to provide additional information
+  if the code deviates from the installation and run instructions here.
 
 ## Prerequisites
 
