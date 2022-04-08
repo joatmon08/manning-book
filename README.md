@@ -1,7 +1,7 @@
-# The Art of Infrastructure as Code
+# Code Examples for Infrastructure as Code, Patterns & Practices
 
 This repository includes code examples for
-*The Art of Infrastructure as Code*.
+[*Infrastructure as Code, Patterns and Practices*](https://www.manning.com/books/patterns-and-practices-for-infrastructure-as-code).
 
 > Note: For clarity and cost, some of the examples have been abbreviated.
   As a result, not all infrastructure resources will register as healthy or error
@@ -131,8 +131,9 @@ $ terraform destroy
 ```
 
 You can always identify the resources created by this book by examining
-the labels (or tags for AWS). The resources created by this book should
-have a label named `purpose` set to `manning-infrastructure-as-code`.
+the labels (or tags for AWS). Most of the resources created by this
+book should have a label named `purpose` set to `manning-infrastructure-as-code`,
+when applicable.
 
 ## Tests
 
