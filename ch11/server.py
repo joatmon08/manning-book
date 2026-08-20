@@ -48,7 +48,7 @@ class Module():
                         'allow_stopping_for_update': True,
                         'boot_disk': [{
                             'initialize_params': [{
-                                'image': 'ubuntu-1804-lts'
+                                'image': 'ubuntu-2204-lts'
                             }]
                         }],
                         'machine_type': self._machine_type,

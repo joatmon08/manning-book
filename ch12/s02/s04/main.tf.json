@@ -5,7 +5,7 @@
                 "prod": {
                     "can_ip_forward": false,
                     "disk": {
-                        "source_image": "ubuntu-1804-lts"
+                        "source_image": "ubuntu-2204-lts"
                     },
                     "labels": {
                         "name": "prod",

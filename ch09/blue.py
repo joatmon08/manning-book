@@ -111,7 +111,7 @@ def server0(name=f'{server_name}-0',
                     'allow_stopping_for_update': True,
                     'boot_disk': [{
                         'initialize_params': [{
-                            'image': 'ubuntu-1804-lts'
+                            'image': 'ubuntu-2204-lts'
                         }]
                     }],
                     'machine_type': 'e2-micro',
@@ -139,7 +139,7 @@ def server1(name=f'{server_name}-1',
                     'allow_stopping_for_update': True,
                     'boot_disk': [{
                         'initialize_params': [{
-                            'image': 'ubuntu-1804-lts'
+                            'image': 'ubuntu-2204-lts'
                         }]
                     }],
                     'machine_type': 'e2-micro',
@@ -167,7 +167,7 @@ def server2(name=f'{server_name}-2',
                     'allow_stopping_for_update': True,
                     'boot_disk': [{
                         'initialize_params': [{
-                            'image': 'ubuntu-1804-lts'
+                            'image': 'ubuntu-2204-lts'
                         }]
                     }],
                     'machine_type': 'e2-micro',

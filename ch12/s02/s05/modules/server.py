@@ -12,7 +12,7 @@ def build(name, environment, machine_type, zone,
                 'zone': zone,
                 'boot_disk': [{
                     'initialize_params': [{
-                        'image': 'ubuntu-1804-lts'
+                        'image': 'ubuntu-2204-lts'
                     }]
                 }],
                 'machine_type': machine_type,

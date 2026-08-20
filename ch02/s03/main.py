@@ -15,7 +15,7 @@ def hello_server(name, network):
                                     {
                                         'initialize_params': [
                                             {
-                                                'image': 'ubuntu-1804-lts'
+                                                'image': 'ubuntu-2204-lts'
                                             }
                                         ]
                                     }

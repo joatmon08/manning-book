@@ -16,7 +16,7 @@ class DatabaseServerFactory:
                             {
                                 'auto_delete': True,
                                 'boot': True,
-                                'source_image': 'https://www.googleapis.com/compute/v1/projects/gce-uefi-images/global/images/ubuntu-1804-bionic-v20200317'
+                                'source_image': 'https://www.googleapis.com/compute/v1/projects/ubuntu-os-cloud/global/images/family/ubuntu-2204-lts'
                             }
                         ],
                         'lifecycle': [

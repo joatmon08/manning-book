@@ -8,7 +8,7 @@ def build(name, machine_type, zone,
             name: {
                 'can_ip_forward': False,
                 'disk': {
-                    'source_image': 'ubuntu-1804-lts'
+                    'source_image': 'ubuntu-2204-lts'
                 },
                 'machine_type': machine_type,
                 'name': name,
