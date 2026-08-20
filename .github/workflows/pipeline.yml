@@ -69,4 +69,4 @@ jobs:
         GOOGLE_REGION: ${{ secrets.GOOGLE_REGION }}
         GOOGLE_OAUTH_ACCESS_TOKEN: ${{ steps.auth.outputs.auth_token }}
       run: |
-        pytest -m integration --environment=test
+        pytest -m integration --environment=test -vvv
