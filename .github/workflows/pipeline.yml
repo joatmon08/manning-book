@@ -72,6 +72,8 @@ jobs:
         workload_identity_provider: ${{ vars.GOOGLE_WORKLOAD_IDENTITY_POOL_PROVIDER }}
         service_account: ${{ vars.GOOGLE_SERVICE_ACCOUNT }}
         project_id: ${{ secrets.CLOUDSDK_CORE_PROJECT }}
+        token_format: access_token
+        access_token_lifetime: 3600s
     - name: Set up Python 3.9
       uses: actions/setup-python@v7
       with:
@@ -92,6 +94,6 @@ jobs:
         GOOGLE_PROJECT: ${{ secrets.CLOUDSDK_CORE_PROJECT }}
         GOOGLE_CLOUD_PROJECT: ${{ secrets.CLOUDSDK_CORE_PROJECT }}
         GOOGLE_REGION: ${{ secrets.GOOGLE_REGION }}
-        GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.auth.outputs.credentials_file_path }}
+        GOOGLE_OAUTH_ACCESS_TOKEN: ${{ steps.auth.outputs.access_token }}
       run: |
         pytest -m integration --environment=test
