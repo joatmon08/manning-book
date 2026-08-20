@@ -67,13 +67,10 @@ jobs:
     steps:
     - uses: actions/checkout@v7
     - uses: google-github-actions/auth@v3
-      id: auth
       with:
         workload_identity_provider: ${{ vars.GOOGLE_WORKLOAD_IDENTITY_POOL_PROVIDER }}
         service_account: ${{ vars.GOOGLE_SERVICE_ACCOUNT }}
         project_id: ${{ secrets.CLOUDSDK_CORE_PROJECT }}
-        token_format: access_token
-        access_token_lifetime: 3600s
     - name: Set up Python 3.9
       uses: actions/setup-python@v7
       with:
@@ -81,7 +78,7 @@ jobs:
     - name: Set up Terraform
       uses: hashicorp/setup-terraform@v4
       with:
-        terraform_version: 1.0.10
+        terraform_version: 1.15.8
         terraform_wrapper: false
     - name: Install dependencies
       working-directory: .
@@ -91,9 +88,6 @@ jobs:
     - name: Run integration tests against testing environment
       env:
         CLOUDSDK_CORE_PROJECT: ${{ secrets.CLOUDSDK_CORE_PROJECT }}
-        GOOGLE_PROJECT: ${{ secrets.CLOUDSDK_CORE_PROJECT }}
-        GOOGLE_CLOUD_PROJECT: ${{ secrets.CLOUDSDK_CORE_PROJECT }}
         GOOGLE_REGION: ${{ secrets.GOOGLE_REGION }}
-        GOOGLE_OAUTH_ACCESS_TOKEN: ${{ steps.auth.outputs.access_token }}
       run: |
         pytest -m integration --environment=test
