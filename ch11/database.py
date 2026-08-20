@@ -29,6 +29,7 @@ class Module():
                             'google_service_networking_connection.' +
                             f'{self._environment}'
                         ],
+                        'database_version': 'MYSQL_8_0',
                         'region': self._region,
                         'settings': {
                             'tier': self._tier,
