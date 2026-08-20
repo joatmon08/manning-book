@@ -18,7 +18,7 @@ jobs:
     steps:
     - uses: actions/checkout@v7
     - name: Set up Python 3.9
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v7
       with:
         python-version: 3.9
     - name: Install dependencies
@@ -47,7 +47,7 @@ jobs:
         workload_identity_provider: ${{ vars.GOOGLE_WORKLOAD_IDENTITY_POOL_PROVIDER }}
         service_account: ${{ vars.GOOGLE_SERVICE_ACCOUNT }}
         project_id: ${{ secrets.CLOUDSDK_CORE_PROJECT }}
-    - uses: google-github-actions/setup-gcloud@v2
+    - uses: google-github-actions/setup-gcloud@v3
     - name: Verify Workload Identity Federation
       working-directory: .
       env:
@@ -75,13 +75,14 @@ jobs:
         service_account: ${{ vars.GOOGLE_SERVICE_ACCOUNT }}
         project_id: ${{ secrets.CLOUDSDK_CORE_PROJECT }}
     - name: Set up Python 3.9
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v7
       with:
         python-version: 3.9
     - name: Set up Terraform
-      uses: hashicorp/setup-terraform@v1
+      uses: hashicorp/setup-terraform@v4
       with:
         terraform_version: 1.0.10
+        terraform_wrapper: false
     - name: Install dependencies
       working-directory: .
       run: |
