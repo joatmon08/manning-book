@@ -1,8 +1,7 @@
+from main import generate_json, SERVICE_IMAGE, SERVICE_CONFIGURATION_FILE
 import json
 import os
 import pytest
-from main import generate_json, SERVICE_IMAGE, SERVICE_CONFIGURATION_FILE
-import version
 
 expected_service_name = 'hello-world'
 
@@ -47,9 +46,9 @@ def test_configuration_for_service_name(service):
 
 
 @pytest.mark.unit
-def test_configuration_for_service_version(service):
+def test_configuration_for_service_image(service):
     assert service['template']['spec']['containers'][
-        'image'] == f'{SERVICE_IMAGE}@{version.HELLO}'
+        'image'] == SERVICE_IMAGE
 
 
 @pytest.mark.unit

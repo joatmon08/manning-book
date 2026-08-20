@@ -1,6 +1,5 @@
 import json
 import os
-import version
 
 SERVICE_CONFIGURATION_FILE = 'main.tf.json'
 SERVICE_IMAGE = 'us-docker.pkg.dev/cloudrun/container/hello'
@@ -8,11 +7,11 @@ SERVICE_NAME = 'hello-world'
 
 
 class GoogleCloudRunFactoryModule:
-    def __init__(self, name, image, version,
+    def __init__(self, name, image,
                  location='us-central1'):
         self._name = name
         self._location = location
-        self._image = f'{image}@{version}'
+        self._image = image
         self.resources = self._build()
 
     def _build(self):
@@ -59,8 +58,7 @@ class GoogleCloudRunFactoryModule:
 def generate_json(service_name):
     service = GoogleCloudRunFactoryModule(
         name=service_name,
-        image=SERVICE_IMAGE,
-        version=version.HELLO
+        image=SERVICE_IMAGE
     )
     with open(SERVICE_CONFIGURATION_FILE, 'w') as outfile:
         json.dump(service.resources, outfile,
