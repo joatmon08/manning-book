@@ -23,10 +23,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v7
-    - name: Set up Python 3.9
+    - name: Set up Python 3.14
       uses: actions/setup-python@v7
       with:
-        python-version: 3.9
+        python-version-file: .python-version
     - name: Install dependencies
       working-directory: .
       run: |
@@ -56,10 +56,10 @@ jobs:
         service_account: ${{ vars.GOOGLE_SERVICE_ACCOUNT }}
         project_id: ${{ secrets.CLOUDSDK_CORE_PROJECT }}
         token_format: 'access_token'
-    - name: Set up Python 3.9
+    - name: Set up Python 3.14
       uses: actions/setup-python@v7
       with:
-        python-version: 3.9
+        python-version-file: .python-version
     - name: Set up Terraform
       uses: hashicorp/setup-terraform@v4
       with:

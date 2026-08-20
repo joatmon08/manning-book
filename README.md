@@ -14,7 +14,7 @@ This repository includes code examples for
   tutorial at https://console.cloud.google.com/getting-started/checklist.
 - Install the [gcloud command line](https://cloud.google.com/sdk/docs/install) tool.
   This allows you to use the terminal to authenticate and issue commands to GCP.
-- Install Python 3.9.6.
+- Install Python 3.14.4.
   - I use [pyenv](https://github.com/pyenv/pyenv)
     and [pyenv-virtualenv](https://github.com/pyenv/pyenv-virtualenv)
     to manage my Python versions.
