@@ -67,6 +67,7 @@ jobs:
     steps:
     - uses: actions/checkout@v7
     - uses: google-github-actions/auth@v3
+      id: auth
       with:
         workload_identity_provider: ${{ vars.GOOGLE_WORKLOAD_IDENTITY_POOL_PROVIDER }}
         service_account: ${{ vars.GOOGLE_SERVICE_ACCOUNT }}
@@ -88,6 +89,9 @@ jobs:
     - name: Run integration tests against testing environment
       env:
         CLOUDSDK_CORE_PROJECT: ${{ secrets.CLOUDSDK_CORE_PROJECT }}
+        GOOGLE_PROJECT: ${{ secrets.CLOUDSDK_CORE_PROJECT }}
+        GOOGLE_CLOUD_PROJECT: ${{ secrets.CLOUDSDK_CORE_PROJECT }}
         GOOGLE_REGION: ${{ secrets.GOOGLE_REGION }}
+        GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.auth.outputs.credentials_file_path }}
       run: |
         pytest -m integration --environment=test
