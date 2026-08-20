@@ -71,6 +71,13 @@ jobs:
         workload_identity_provider: ${{ vars.GOOGLE_WORKLOAD_IDENTITY_POOL_PROVIDER }}
         service_account: ${{ vars.GOOGLE_SERVICE_ACCOUNT }}
         project_id: ${{ secrets.CLOUDSDK_CORE_PROJECT }}
+    - uses: google-github-actions/setup-gcloud@v3
+    - name: Export access token for Terraform
+      working-directory: .
+      run: |
+        TOKEN="$(gcloud auth print-access-token)"
+        echo "::add-mask::${TOKEN}"
+        echo "GOOGLE_OAUTH_ACCESS_TOKEN=${TOKEN}" >> "${GITHUB_ENV}"
     - name: Set up Python 3.9
       uses: actions/setup-python@v7
       with:
