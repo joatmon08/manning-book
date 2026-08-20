@@ -44,6 +44,7 @@ jobs:
     steps:
     - uses: actions/checkout@v7
     - uses: google-github-actions/auth@v3
+      id: auth
       with:
         workload_identity_provider: ${{ vars.GOOGLE_WORKLOAD_IDENTITY_POOL_PROVIDER }}
         service_account: ${{ vars.GOOGLE_SERVICE_ACCOUNT }}
@@ -67,6 +68,6 @@ jobs:
       env:
         CLOUDSDK_CORE_PROJECT: ${{ secrets.CLOUDSDK_CORE_PROJECT }}
         GOOGLE_REGION: ${{ secrets.GOOGLE_REGION }}
-        GOOGLE_OAUTH_ACCESS_TOKEN: ${{ steps.auth.outputs.auth_token }}
+        GOOGLE_OAUTH_ACCESS_TOKEN: ${{ steps.auth.outputs.access_token }}
       run: |
         pytest -m integration --environment=test -vvv
