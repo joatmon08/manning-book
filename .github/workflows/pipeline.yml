@@ -33,32 +33,9 @@ jobs:
       run: |
         pytest -m unit
 
-  oidc-check:
-    environment: testing
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write
-
-    steps:
-    - uses: actions/checkout@v7
-    - uses: google-github-actions/auth@v3
-      with:
-        workload_identity_provider: ${{ vars.GOOGLE_WORKLOAD_IDENTITY_POOL_PROVIDER }}
-        service_account: ${{ vars.GOOGLE_SERVICE_ACCOUNT }}
-        project_id: ${{ secrets.CLOUDSDK_CORE_PROJECT }}
-    - uses: google-github-actions/setup-gcloud@v3
-    - name: Verify Workload Identity Federation
-      working-directory: .
-      run: |
-        ACCOUNT="$(gcloud auth list --filter=status:ACTIVE --format='value(account)')"
-        echo "authenticated as ${ACCOUNT}"
-        test -n "${ACCOUNT}"
-        gcloud auth print-access-token >/dev/null
-
   integration-tests:
     environment: testing
-    needs: [unit-test, oidc-check]
+    needs: [unit-test]
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -71,13 +48,7 @@ jobs:
         workload_identity_provider: ${{ vars.GOOGLE_WORKLOAD_IDENTITY_POOL_PROVIDER }}
         service_account: ${{ vars.GOOGLE_SERVICE_ACCOUNT }}
         project_id: ${{ secrets.CLOUDSDK_CORE_PROJECT }}
-    - uses: google-github-actions/setup-gcloud@v3
-    - name: Export access token for Terraform
-      working-directory: .
-      run: |
-        TOKEN="$(gcloud auth print-access-token)"
-        echo "::add-mask::${TOKEN}"
-        echo "GOOGLE_OAUTH_ACCESS_TOKEN=${TOKEN}" >> "${GITHUB_ENV}"
+        token_format: 'access_token'
     - name: Set up Python 3.9
       uses: actions/setup-python@v7
       with:
@@ -96,5 +67,6 @@ jobs:
       env:
         CLOUDSDK_CORE_PROJECT: ${{ secrets.CLOUDSDK_CORE_PROJECT }}
         GOOGLE_REGION: ${{ secrets.GOOGLE_REGION }}
+        GOOGLE_OAUTH_ACCESS_TOKEN: ${{ steps.auth.outputs.auth_token }}
       run: |
         pytest -m integration --environment=test
