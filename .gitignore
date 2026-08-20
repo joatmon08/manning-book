@@ -1,4 +1,5 @@
 gcp-key*.json
+gha-creds-*.json
 __pycache__
 credentials.py
 .pytest_cache
