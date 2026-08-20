@@ -1,3 +1,4 @@
+import json
 import os
 import subprocess
 import sys
@@ -93,4 +94,15 @@ def is_aws(directory: Path) -> bool:
 def skip_reason(directory: Path):
     if is_aws(directory) and not os.environ.get("AWS_ACCESS_KEY_ID"):
         return "AWS credentials are not set"
+    for path in directory.glob("*.tf"):
+        if "omitted for clarity" in path.read_text(encoding="utf-8"):
+            return f"{path.name} is an abbreviated teaching stub"
+    for path in directory.glob("*.tf.json"):
+        try:
+            config = json.loads(path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            continue
+        data = config.get("data")
+        if data and "google_project" in json.dumps(data):
+            return "google_project data source requires resourcemanager.projects.get"
     return None
