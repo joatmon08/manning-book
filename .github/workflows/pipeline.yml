@@ -50,14 +50,11 @@ jobs:
     - uses: google-github-actions/setup-gcloud@v3
     - name: Verify Workload Identity Federation
       working-directory: .
-      env:
-        CLOUDSDK_CORE_PROJECT: ${{ secrets.CLOUDSDK_CORE_PROJECT }}
       run: |
-        gcloud auth list
+        ACCOUNT="$(gcloud auth list --filter=status:ACTIVE --format='value(account)')"
+        echo "authenticated as ${ACCOUNT}"
+        test -n "${ACCOUNT}"
         gcloud auth print-access-token >/dev/null
-        if [ -n "${CLOUDSDK_CORE_PROJECT}" ]; then
-          gcloud projects describe "${CLOUDSDK_CORE_PROJECT}"
-        fi
 
   integration-tests:
     environment: testing
