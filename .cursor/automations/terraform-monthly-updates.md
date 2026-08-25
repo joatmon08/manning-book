@@ -25,7 +25,7 @@ Terraform rarely ships major versions — treat patch and minor updates as first
 ## Detect
 1. Run: `python3 scripts/check_terraform_updates.py` and `python3 scripts/check_terraform_updates.py --json`
 2. Act on entries under `bumps` (any newer stable version: patch, minor, or major).
-3. Scope is `ch*/**`, README Terraform pin, and `.github/workflows` `terraform_version`. Do not change `live/**` unless the human follow-up explicitly asks.
+3. Scope is `ch*/**`, README Terraform pin, and `.github/workflows` `terraform_version`.
 
 ## Decision rules
 - If `has_update` is false: stop. Do not open a PR.
