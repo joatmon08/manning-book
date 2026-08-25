@@ -71,7 +71,7 @@ jobs:
           python-version-file: .python-version
       - uses: hashicorp/setup-terraform@v4
         with:
-          terraform_version: 1.15.8
+          terraform_version: 1.15.9
           terraform_wrapper: false
       - name: Install dependencies
         run: |
@@ -113,7 +113,7 @@ jobs:
           python-version-file: .python-version
       - uses: hashicorp/setup-terraform@v4
         with:
-          terraform_version: 1.15.8
+          terraform_version: 1.15.9
           terraform_wrapper: false
       - name: Install dependencies
         run: |
@@ -148,7 +148,7 @@ jobs:
           python-version-file: .python-version
       - uses: hashicorp/setup-terraform@v4
         with:
-          terraform_version: 1.15.8
+          terraform_version: 1.15.9
           terraform_wrapper: false
       - name: Install dependencies
         run: |
@@ -190,7 +190,7 @@ jobs:
           python-version-file: .python-version
       - uses: hashicorp/setup-terraform@v4
         with:
-          terraform_version: 1.15.8
+          terraform_version: 1.15.9
           terraform_wrapper: false
       - name: Install dependencies
         run: |

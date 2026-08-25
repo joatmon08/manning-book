@@ -11,7 +11,7 @@ import re
 from pathlib import Path
 text = Path("README.md").read_text(encoding="utf-8")
 match = re.search(r"Install Terraform\s+(\d+\.\d+\.\d+)", text)
-print(match.group(1) if match else "1.15.8")
+print(match.group(1) if match else "1.15.9")
 PY
 )"
 
