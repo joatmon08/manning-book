@@ -1,0 +1,4 @@
+{
+  "name": "manning-book",
+  "install": "bash scripts/cloud-agent-install.sh"
+}
