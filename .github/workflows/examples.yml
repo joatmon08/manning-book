@@ -66,10 +66,6 @@ jobs:
           service_account: ${{ vars.GOOGLE_SERVICE_ACCOUNT }}
           project_id: ${{ secrets.CLOUDSDK_CORE_PROJECT }}
           token_format: access_token
-      - uses: aws-actions/configure-aws-credentials@v6
-        with:
-          role-to-assume: ${{ env.AWS_ROLE_ARN }}
-          aws-region: ${{ env.AWS_DEFAULT_REGION }}
       - uses: actions/setup-python@v7
         with:
           python-version-file: .python-version
@@ -101,6 +97,37 @@ jobs:
           name: plan-junit
           path: plan-junit.xml
 
+  plan-aws:
+    name: Plan AWS examples
+    if: github.event_name != 'workflow_dispatch' || inputs.suite == 'plan'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - uses: aws-actions/configure-aws-credentials@v6
+        with:
+          role-to-assume: ${{ env.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_DEFAULT_REGION }}
+      - uses: actions/setup-python@v7
+        with:
+          python-version-file: .python-version
+      - uses: hashicorp/setup-terraform@v4
+        with:
+          terraform_version: 1.15.8
+          terraform_wrapper: false
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          mkdir -p "$TF_PLUGIN_CACHE_DIR"
+      - name: Plan AWS examples
+        run: pytest -m plan -k aws --junitxml=plan-aws-junit.xml -q
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: plan-aws-junit
+          path: plan-aws-junit.xml
+
   apply:
     name: Apply examples
     if: github.event_name == 'workflow_dispatch' && inputs.suite == 'apply'
@@ -116,10 +143,6 @@ jobs:
           service_account: ${{ vars.GOOGLE_SERVICE_ACCOUNT }}
           project_id: ${{ secrets.CLOUDSDK_CORE_PROJECT }}
           token_format: access_token
-      - uses: aws-actions/configure-aws-credentials@v6
-        with:
-          role-to-assume: ${{ env.AWS_ROLE_ARN }}
-          aws-region: ${{ env.AWS_DEFAULT_REGION }}
       - uses: actions/setup-python@v7
         with:
           python-version-file: .python-version
@@ -150,3 +173,34 @@ jobs:
         with:
           name: apply-junit
           path: apply-junit.xml
+
+  apply-aws:
+    name: Apply AWS examples
+    if: github.event_name == 'workflow_dispatch' && inputs.suite == 'apply'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v7
+      - uses: aws-actions/configure-aws-credentials@v6
+        with:
+          role-to-assume: ${{ env.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_DEFAULT_REGION }}
+      - uses: actions/setup-python@v7
+        with:
+          python-version-file: .python-version
+      - uses: hashicorp/setup-terraform@v4
+        with:
+          terraform_version: 1.15.8
+          terraform_wrapper: false
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          mkdir -p "$TF_PLUGIN_CACHE_DIR"
+      - name: Apply AWS examples
+        run: pytest -m apply -k aws --junitxml=apply-aws-junit.xml -q
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: apply-aws-junit
+          path: apply-aws-junit.xml
