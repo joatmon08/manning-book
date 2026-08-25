@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
-"""Report Terraform CLI and provider major versions that need a bump.
+"""Report Terraform CLI and provider versions that need a bump.
 
 Scans chapter lockfiles under ch*/ and the Terraform version pinned in
 README.md / GitHub Actions. Compares against the HashiCorp registry and
-releases API. Exits 0 when no major upgrades are available, 1 when at
-least one major bump is available, 2 on unexpected errors.
+releases API. Exits 0 when everything is current, 1 when at least one
+newer stable version is available, 2 on unexpected errors.
 
-Intended for Cursor Automations (and optional CI) that open a PR only
-when a new major line exists.
+Intended for a monthly Cursor Automation that opens a PR when updates
+exist (Terraform rarely ships majors; minor/patch bumps still matter).
 """
 
 from __future__ import annotations
@@ -26,7 +26,7 @@ from packaging.version import InvalidVersion, Version
 ROOT = Path(__file__).resolve().parents[1]
 REGISTRY = "https://registry.terraform.io/v1/providers"
 TF_RELEASES = "https://releases.hashicorp.com/terraform/index.json"
-USER_AGENT = "manning-book-terraform-major-check/1.0"
+USER_AGENT = "manning-book-terraform-update-check/1.0"
 
 LOCK_PROVIDER_RE = re.compile(
     r'provider\s+"(?P<source>[^"]+)"\s*\{\s*version\s*=\s*"(?P<version>[^"]+)"',
@@ -51,6 +51,16 @@ def parse_stable(version: str) -> Version | None:
         return Version(version)
     except InvalidVersion:
         return None
+
+
+def bump_kind(current: Version, latest: Version) -> str | None:
+    if latest <= current:
+        return None
+    if latest.major > current.major:
+        return "major"
+    if latest.minor > current.minor:
+        return "minor"
+    return "patch"
 
 
 def inventory_lockfiles(root: Path) -> dict[str, Version]:
@@ -83,36 +93,28 @@ def inventory_terraform_cli(root: Path) -> Version | None:
     return max(candidates) if candidates else None
 
 
-def latest_provider_versions(namespace: str, name: str) -> tuple[Version, dict[int, Version]]:
+def latest_provider_version(namespace: str, name: str) -> Version:
     data = fetch_json(f"{REGISTRY}/{namespace}/{name}/versions")
-    by_major: dict[int, Version] = {}
+    versions: list[Version] = []
     for entry in data.get("versions", []):
         version = parse_stable(entry.get("version", ""))
-        if version is None:
-            continue
-        current = by_major.get(version.major)
-        if current is None or version > current:
-            by_major[version.major] = version
-    if not by_major:
+        if version is not None:
+            versions.append(version)
+    if not versions:
         raise RuntimeError(f"no stable versions for {namespace}/{name}")
-    latest = max(by_major.values())
-    return latest, by_major
+    return max(versions)
 
 
-def latest_terraform_versions() -> tuple[Version, dict[int, Version]]:
+def latest_terraform_version() -> Version:
     data = fetch_json(TF_RELEASES)
-    by_major: dict[int, Version] = {}
+    versions: list[Version] = []
     for raw in data.get("versions", {}):
         version = parse_stable(raw)
-        if version is None:
-            continue
-        current = by_major.get(version.major)
-        if current is None or version > current:
-            by_major[version.major] = version
-    if not by_major:
+        if version is not None:
+            versions.append(version)
+    if not versions:
         raise RuntimeError("no stable Terraform releases found")
-    latest = max(by_major.values())
-    return latest, by_major
+    return max(versions)
 
 
 def split_registry_source(source: str) -> tuple[str, str]:
@@ -123,15 +125,7 @@ def split_registry_source(source: str) -> tuple[str, str]:
     return parts[-2], parts[-1]
 
 
-def major_gap(current: Version, by_major: dict[int, Version]) -> Version | None:
-    newer_majors = [major for major in by_major if major > current.major]
-    if not newer_majors:
-        return None
-    target_major = max(newer_majors)
-    return by_major[target_major]
-
-
-def format_row(name: str, current: Version | str, latest: Version, action: str) -> str:
+def format_row(name: str, current: Version | str, latest: Version | str, action: str) -> str:
     return f"{name:40} {str(current):12} {str(latest):12} {action}"
 
 
@@ -160,39 +154,30 @@ def main(argv: list[str] | None = None) -> int:
         if terraform_current is None:
             rows.append(format_row("terraform (cli)", "missing", "?", "ERROR"))
         else:
-            tf_latest, tf_by_major = latest_terraform_versions()
-            target = major_gap(terraform_current, tf_by_major)
-            action = (
-                f"MAJOR -> {target}"
-                if target is not None
-                else ("current major" if terraform_current.major == tf_latest.major else "ok")
-            )
+            tf_latest = latest_terraform_version()
+            kind = bump_kind(terraform_current, tf_latest)
+            action = f"{kind.upper()} -> {tf_latest}" if kind else "current"
             rows.append(format_row("terraform (cli)", terraform_current, tf_latest, action))
-            if target is not None:
+            if kind is not None:
                 bumps.append(
                     {
                         "kind": "terraform",
                         "name": "terraform",
                         "current": str(terraform_current),
                         "latest": str(tf_latest),
-                        "target_major": str(target),
+                        "bump": kind,
                     }
                 )
 
-        # Group identical sources; keep deterministic order.
         for source in sorted(locked):
             current = locked[source]
             namespace, name = split_registry_source(source)
-            latest, by_major = latest_provider_versions(namespace, name)
-            target = major_gap(current, by_major)
+            latest = latest_provider_version(namespace, name)
+            kind = bump_kind(current, latest)
             label = f"{namespace}/{name}"
-            action = (
-                f"MAJOR -> {target}"
-                if target is not None
-                else ("current major" if current.major == latest.major else "ok")
-            )
+            action = f"{kind.upper()} -> {latest}" if kind else "current"
             rows.append(format_row(label, current, latest, action))
-            if target is not None:
+            if kind is not None:
                 bumps.append(
                     {
                         "kind": "provider",
@@ -200,28 +185,27 @@ def main(argv: list[str] | None = None) -> int:
                         "source": source,
                         "current": str(current),
                         "latest": str(latest),
-                        "target_major": str(target),
+                        "bump": kind,
                     }
                 )
 
-        # Surface providers that appear only in some lockfiles with mixed majors.
-        majors_seen: dict[str, set[int]] = defaultdict(set)
+        versions_seen: dict[str, set[str]] = defaultdict(set)
         for lockfile in root.glob("ch*/**/.terraform.lock.hcl"):
             text = lockfile.read_text(encoding="utf-8")
             for match in LOCK_PROVIDER_RE.finditer(text):
                 version = parse_stable(match.group("version"))
                 if version is not None:
-                    majors_seen[match.group("source")].add(version.major)
+                    versions_seen[match.group("source")].add(str(version))
         drift = {
-            source: sorted(majors)
-            for source, majors in majors_seen.items()
-            if len(majors) > 1
+            source: sorted(versions, key=Version)
+            for source, versions in versions_seen.items()
+            if len(versions) > 1
         }
 
         payload = {
             "bumps": bumps,
             "drift": drift,
-            "has_major_bump": bool(bumps),
+            "has_update": bool(bumps),
         }
 
         if args.json:
@@ -232,18 +216,18 @@ def main(argv: list[str] | None = None) -> int:
             for row in rows:
                 print(row)
             if drift:
-                print("\nMixed majors across chapter lockfiles:")
-                for source, majors in sorted(drift.items()):
-                    print(f"  {source}: {majors}")
+                print("\nMixed versions across chapter lockfiles:")
+                for source, versions in sorted(drift.items()):
+                    print(f"  {source}: {versions}")
             if bumps:
-                print("\nMajor upgrades available:")
+                print("\nUpgrades available:")
                 for bump in bumps:
                     print(
-                        f"  - {bump['name']}: {bump['current']} -> {bump['target_major']}"
-                        f" (latest on that line / overall {bump['latest']})"
+                        f"  - {bump['name']}: {bump['current']} -> {bump['latest']}"
+                        f" ({bump['bump']})"
                     )
             else:
-                print("\nNo Terraform or provider major upgrades available.")
+                print("\nNo Terraform or provider upgrades available.")
 
         return 1 if bumps else 0
     except (urllib.error.URLError, TimeoutError, RuntimeError, ValueError) as exc:
