@@ -91,6 +91,15 @@ def is_aws(directory: Path) -> bool:
     return "aws" in directory.parts
 
 
+def _uses_google_project_data(config) -> bool:
+    if isinstance(config, list):
+        return any(_uses_google_project_data(item) for item in config)
+    if not isinstance(config, dict):
+        return False
+    data = config.get("data")
+    return bool(data) and "google_project" in json.dumps(data)
+
+
 def skip_reason(directory: Path):
     if is_aws(directory) and not os.environ.get("AWS_ACCESS_KEY_ID"):
         return "AWS credentials are not set"
@@ -102,7 +111,6 @@ def skip_reason(directory: Path):
             config = json.loads(path.read_text(encoding="utf-8"))
         except json.JSONDecodeError:
             continue
-        data = config.get("data")
-        if data and "google_project" in json.dumps(data):
+        if _uses_google_project_data(config):
             return "google_project data source requires resourcemanager.projects.get"
     return None
