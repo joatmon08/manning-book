@@ -32,7 +32,7 @@ class ServerFactory:
                                         {
                                             'initialize_params': [
                                                 {
-                                                    'image': 'ubuntu-1804-lts'
+                                                    'image': 'ubuntu-2204-lts'
                                                 }
                                             ]
                                         }

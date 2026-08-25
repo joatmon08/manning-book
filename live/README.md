@@ -4,7 +4,7 @@
 
 1. [Amazon Web Services](https://aws.amazon.com/getting-started/) account
 1. [Terraform](https://www.terraform.io/downloads.html) 1.0+
-1. [Python](https://www.python.org/downloads/) 3.9+
+1. [Python](https://www.python.org/downloads/) 3.14+
 
 ## Story
 

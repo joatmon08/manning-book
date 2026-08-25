@@ -1,0 +1,206 @@
+name: Example Terraform checks
+
+on:
+  pull_request:
+    paths:
+      - "ch*/**"
+      - "tests/**"
+      - "conftest.py"
+      - "pytest.ini"
+      - "requirements.txt"
+      - ".python-version"
+      - ".github/workflows/examples.yml"
+  push:
+    branches: [main]
+    paths:
+      - "ch*/**"
+      - "tests/**"
+      - "conftest.py"
+      - "pytest.ini"
+      - "requirements.txt"
+      - ".python-version"
+      - ".github/workflows/examples.yml"
+  workflow_dispatch:
+    inputs:
+      suite:
+        description: plan or apply
+        required: true
+        default: plan
+        type: choice
+        options:
+          - plan
+          - apply
+      chapter:
+        description: Optional chapter directory such as ch02
+        required: false
+        type: string
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event.inputs.suite || 'plan' }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  id-token: write
+
+env:
+  TF_IN_AUTOMATION: "true"
+  TF_INPUT: "0"
+  TF_PLUGIN_CACHE_DIR: ${{ github.workspace }}/.terraform.d/plugin-cache
+  AWS_ROLE_ARN: arn:aws:iam::925036366969:role/GitHub-Actions-Manning-Book
+  AWS_DEFAULT_REGION: us-east-1
+
+jobs:
+  plan:
+    name: Plan examples
+    if: github.event_name != 'workflow_dispatch' || inputs.suite == 'plan'
+    environment: testing
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v7
+      - uses: google-github-actions/auth@v3
+        id: auth
+        with:
+          workload_identity_provider: ${{ vars.GOOGLE_WORKLOAD_IDENTITY_POOL_PROVIDER }}
+          service_account: ${{ vars.GOOGLE_SERVICE_ACCOUNT }}
+          project_id: ${{ secrets.CLOUDSDK_CORE_PROJECT }}
+          token_format: access_token
+      - uses: actions/setup-python@v7
+        with:
+          python-version-file: .python-version
+      - uses: hashicorp/setup-terraform@v4
+        with:
+          terraform_version: 1.15.8
+          terraform_wrapper: false
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          mkdir -p "$TF_PLUGIN_CACHE_DIR"
+      - name: Plan examples
+        env:
+          CLOUDSDK_CORE_PROJECT: ${{ secrets.CLOUDSDK_CORE_PROJECT }}
+          GOOGLE_PROJECT: ${{ secrets.CLOUDSDK_CORE_PROJECT }}
+          GOOGLE_REGION: ${{ secrets.GOOGLE_REGION }}
+          GOOGLE_OAUTH_ACCESS_TOKEN: ${{ steps.auth.outputs.access_token }}
+          CHAPTER: ${{ github.event_name == 'workflow_dispatch' && inputs.chapter || '' }}
+        run: |
+          if [ -n "$CHAPTER" ]; then
+            pytest -m plan --chapter "$CHAPTER" --junitxml=plan-junit.xml -q
+          else
+            pytest -m plan --junitxml=plan-junit.xml -q
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: plan-junit
+          path: plan-junit.xml
+
+  plan-aws:
+    name: Plan AWS examples
+    if: github.event_name != 'workflow_dispatch' || inputs.suite == 'plan'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - uses: aws-actions/configure-aws-credentials@v6
+        with:
+          role-to-assume: ${{ env.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_DEFAULT_REGION }}
+      - uses: actions/setup-python@v7
+        with:
+          python-version-file: .python-version
+      - uses: hashicorp/setup-terraform@v4
+        with:
+          terraform_version: 1.15.8
+          terraform_wrapper: false
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          mkdir -p "$TF_PLUGIN_CACHE_DIR"
+      - name: Plan AWS examples
+        run: pytest -m plan -k aws --junitxml=plan-aws-junit.xml -q
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: plan-aws-junit
+          path: plan-aws-junit.xml
+
+  apply:
+    name: Apply examples
+    if: github.event_name == 'workflow_dispatch' && inputs.suite == 'apply'
+    environment: testing
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v7
+      - uses: google-github-actions/auth@v3
+        id: auth
+        with:
+          workload_identity_provider: ${{ vars.GOOGLE_WORKLOAD_IDENTITY_POOL_PROVIDER }}
+          service_account: ${{ vars.GOOGLE_SERVICE_ACCOUNT }}
+          project_id: ${{ secrets.CLOUDSDK_CORE_PROJECT }}
+          token_format: access_token
+      - uses: actions/setup-python@v7
+        with:
+          python-version-file: .python-version
+      - uses: hashicorp/setup-terraform@v4
+        with:
+          terraform_version: 1.15.8
+          terraform_wrapper: false
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          mkdir -p "$TF_PLUGIN_CACHE_DIR"
+      - name: Apply examples
+        env:
+          CLOUDSDK_CORE_PROJECT: ${{ secrets.CLOUDSDK_CORE_PROJECT }}
+          GOOGLE_PROJECT: ${{ secrets.CLOUDSDK_CORE_PROJECT }}
+          GOOGLE_REGION: ${{ secrets.GOOGLE_REGION }}
+          GOOGLE_OAUTH_ACCESS_TOKEN: ${{ steps.auth.outputs.access_token }}
+          CHAPTER: ${{ github.event_name == 'workflow_dispatch' && inputs.chapter || '' }}
+        run: |
+          if [ -n "$CHAPTER" ]; then
+            pytest -m apply --chapter "$CHAPTER" --junitxml=apply-junit.xml -q
+          else
+            pytest -m apply --junitxml=apply-junit.xml -q
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: apply-junit
+          path: apply-junit.xml
+
+  apply-aws:
+    name: Apply AWS examples
+    if: github.event_name == 'workflow_dispatch' && inputs.suite == 'apply'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v7
+      - uses: aws-actions/configure-aws-credentials@v6
+        with:
+          role-to-assume: ${{ env.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_DEFAULT_REGION }}
+      - uses: actions/setup-python@v7
+        with:
+          python-version-file: .python-version
+      - uses: hashicorp/setup-terraform@v4
+        with:
+          terraform_version: 1.15.8
+          terraform_wrapper: false
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          mkdir -p "$TF_PLUGIN_CACHE_DIR"
+      - name: Apply AWS examples
+        run: pytest -m apply -k aws --junitxml=apply-aws-junit.xml -q
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: apply-aws-junit
+          path: apply-aws-junit.xml
