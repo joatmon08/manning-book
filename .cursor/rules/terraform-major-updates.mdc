@@ -1,0 +1,38 @@
+---
+description: Terraform and provider major-version upgrade workflow for chapter examples
+alwaysApply: true
+---
+
+# Terraform major upgrades
+
+When asked to upgrade Terraform or providers (including Cursor Automations for major bumps):
+
+## Scope
+
+- In scope: `ch*/**` book listings, `README.md` Terraform pin, `.github/workflows/*.yml` `terraform_version`, and related Python generators / regenerated `*.tf.json`.
+- Out of scope unless explicitly requested: `live/**` (intentionally older AWS `~> 3.0` examples).
+
+## Detect first
+
+```bash
+python3 scripts/check_terraform_majors.py
+python3 scripts/check_terraform_majors.py --json
+```
+
+Only open a PR for **major** line changes (for example provider 6.x → 7.x, or Terraform 1.x → 2.x). Do not open a PR for minor/patch-only moves.
+
+## Upgrade workflow
+
+1. Prefer one component per PR when multiple majors are available (Terraform CLI, `hashicorp/google` + `google-beta` together, or `hashicorp/aws`).
+2. Update pins: README prerequisite, workflow `terraform_version`, and any explicit provider constraints.
+3. Refresh chapter lockfiles with `terraform init -upgrade` (see `scripts/upgrade_all.sh`) after installing the target Terraform CLI if needed.
+4. Keep Python as the source of truth: edit `main.py` (or helpers) when schema/API breaks, then regenerate `*.tf.json`.
+5. Validate before opening a PR:
+   - `terraform validate` in touched example dirs
+   - `pytest -m plan` when cloud credentials exist; otherwise validate + note plan was skipped
+6. If the major upgrade is unsafe or unclear after reading upgrade guides, make no code changes and explain why.
+
+## PR shape
+
+- Title: `chore(terraform): bump <name> from <old> to <new> (major)`
+- Body: current → target, registry/changelog links, commands run, residual risks, and that `live/` was left alone.
