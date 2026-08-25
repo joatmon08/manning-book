@@ -47,6 +47,8 @@ env:
   TF_IN_AUTOMATION: "true"
   TF_INPUT: "0"
   TF_PLUGIN_CACHE_DIR: ${{ github.workspace }}/.terraform.d/plugin-cache
+  AWS_ROLE_ARN: arn:aws:iam::925036366969:role/GitHub-Actions-Manning-Book
+  AWS_DEFAULT_REGION: us-east-1
 
 jobs:
   plan:
@@ -64,6 +66,10 @@ jobs:
           service_account: ${{ vars.GOOGLE_SERVICE_ACCOUNT }}
           project_id: ${{ secrets.CLOUDSDK_CORE_PROJECT }}
           token_format: access_token
+      - uses: aws-actions/configure-aws-credentials@v6
+        with:
+          role-to-assume: ${{ env.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_DEFAULT_REGION }}
       - uses: actions/setup-python@v7
         with:
           python-version-file: .python-version
@@ -110,6 +116,10 @@ jobs:
           service_account: ${{ vars.GOOGLE_SERVICE_ACCOUNT }}
           project_id: ${{ secrets.CLOUDSDK_CORE_PROJECT }}
           token_format: access_token
+      - uses: aws-actions/configure-aws-credentials@v6
+        with:
+          role-to-assume: ${{ env.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_DEFAULT_REGION }}
       - uses: actions/setup-python@v7
         with:
           python-version-file: .python-version
