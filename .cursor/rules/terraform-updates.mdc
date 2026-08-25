@@ -10,7 +10,6 @@ When asked to upgrade Terraform or providers (including the monthly Cursor Autom
 ## Scope
 
 - In scope: `ch*/**` book listings, `README.md` Terraform pin, `.github/workflows/*.yml` `terraform_version`, and related Python generators / regenerated `*.tf.json`.
-- Out of scope unless explicitly requested: `live/**` (intentionally older AWS `~> 3.0` examples).
 
 ## Detect first
 
@@ -35,4 +34,4 @@ Open a PR when `has_update` is true — any newer stable Terraform CLI or chapte
 ## PR shape
 
 - Title: `chore(terraform): bump <name> from <old> to <new>`
-- Body: current → target, bump kind (patch/minor/major), changelog links, commands run, residual risks, and that `live/` was left alone.
+- Body: current → target, bump kind (patch/minor/major), changelog links, commands run, and residual risks.
