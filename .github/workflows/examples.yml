@@ -5,6 +5,7 @@ on:
     paths:
       - "ch*/**"
       - "tests/**"
+      - "conftest.py"
       - "pytest.ini"
       - "requirements.txt"
       - ".python-version"
@@ -14,6 +15,7 @@ on:
     paths:
       - "ch*/**"
       - "tests/**"
+      - "conftest.py"
       - "pytest.ini"
       - "requirements.txt"
       - ".python-version"

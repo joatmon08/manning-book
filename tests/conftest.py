@@ -2,15 +2,6 @@ import pytest
 from examples import example_id, iter_examples
 
 
-def pytest_addoption(parser):
-    parser.addoption(
-        "--chapter",
-        action="store",
-        default=None,
-        help="Limit example tests to one chapter directory, e.g. ch02",
-    )
-
-
 def pytest_configure(config):
     config.addinivalue_line(
         "markers", "plan: generate JSON and run terraform plan"
