@@ -63,7 +63,7 @@ jobs:
     - name: Set up Terraform
       uses: hashicorp/setup-terraform@v4
       with:
-        terraform_version: 1.15.9
+        terraform_version: 1.16.0
         terraform_wrapper: false
     - name: Install dependencies
       working-directory: .
